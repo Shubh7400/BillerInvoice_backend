@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ClientModule } from './client/client.module';
 import { ProjectsModule } from './projects/projects.module';
 import { InvoiceModule } from './invoice/invoice.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { InvoiceModule } from './invoice/invoice.module';
     ClientModule,
     ProjectsModule,
     InvoiceModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
