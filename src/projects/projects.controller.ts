@@ -16,7 +16,7 @@ import { UpdateProjectDto } from './dto/updateproject.dto';
 
 @Controller('projects')
 export class ProjectsController {
-  constructor(private projectService: ProjectsService) {}
+  constructor(private projectService: ProjectsService) { }
   @Post()
   @UseGuards(AuthGuard())
   createProject(@Body() createProjectDto: CreateProjectDto) {
@@ -45,9 +45,9 @@ export class ProjectsController {
   deleteProjectById(@Param('id') id: string) {
     return this.projectService.deleteProjectById(id);
   }
-  @Get('/admin')
+  @Get('/admin/:AdminId')
   @UseGuards(AuthGuard())
-  getAllProjectsByAdmin(@Req() req) {
-    return this.projectService.getAllProjectsByAdmin(req.user);
+  getAllProjectsByAdmin(@Param('AdminId') AdminId: string) {
+    return this.projectService.getAllProjectsByAdmin(AdminId);
   }
 }

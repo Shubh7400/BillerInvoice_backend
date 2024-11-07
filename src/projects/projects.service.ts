@@ -15,7 +15,7 @@ import { User } from 'src/auth/schemas/user';
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private readonly projectModel: Model<Project>,
-  ) {}
+  ) { }
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
     const newProjectName = createProjectDto.projectName.trim();
     if (newProjectName.length === 0) {
@@ -143,8 +143,8 @@ export class ProjectsService {
       }
     }
   }
-  async getAllProjectsByAdmin(user: User) {
-    const projects = await this.projectModel.find({ adminId: user._id });
+  async getAllProjectsByAdmin(userId: string) {
+    const projects = await this.projectModel.find({ adminId: userId });
     return projects;
   }
 }
