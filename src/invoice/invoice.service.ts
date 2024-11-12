@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Invoice } from './schemas/invoice';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateInvoiceDto } from './dto/createInvoice.dto';
 import { User } from 'src/auth/schemas/user';
 import { Project } from 'src/projects/schemas/project';
@@ -14,7 +14,7 @@ export class InvoiceService {
     @InjectModel(Project.name) private projectModel: Model<Project>,
     @InjectModel(Client.name) private clientModel: Model<Client>,
     @InjectModel(User.name) private userModel: Model<User>,
-  ) {}
+  ) { }
   async createInvoice(createInvoiceDto: CreateInvoiceDto) {
     // const { clientId, projects } = createInvoiceDto;
     // let amountBeforeGst = 0;
@@ -74,4 +74,45 @@ export class InvoiceService {
       throw new NotFoundException('Invoice does not exists');
     }
   }
+
+  async getInvoiceCountByYear(year: string, userId: string) {
+    try {
+      const counts = await this.invoiceModel.aggregate([
+        {
+          $match: {
+            adminId: new Types.ObjectId(userId),
+            billDate: {
+              $gte: new Date(`${year}-01-01`),
+              $lte: new Date(`${year}-12-31`),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: { $month: '$billDate' },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            month: '$_id',
+            count: 1
+          }
+        },
+        { $sort: { '_id': 1 } },
+      ]);
+
+      const monthlyCounts = Array(12).fill(0);
+
+      counts.forEach(({ _id, count }) => {
+        monthlyCounts[_id - 1] = count;
+      });
+
+      return { year: year, data: counts };
+    } catch (error) {
+      throw new NotFoundException('Unable to get invoice counts for the specified year.');
+    }
+  }
+
 }
