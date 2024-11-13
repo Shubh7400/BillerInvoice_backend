@@ -8,8 +8,6 @@ export class Client extends Document {
   @Prop()
   gistin: string;
   @Prop()
-  contactNo: string;
-  @Prop()
   pancardNo: string;
   @Prop({ type: Object })
   address: {
@@ -22,11 +20,9 @@ export class Client extends Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: User;
   @Prop()
-  conversionRate: number;
-  @Prop()
   sameState: boolean;
-  @Prop()
-  email: string;
+  @Prop({ type: [String] })
+  email: string[];
 }
 
 export const ClientSchema = SchemaFactory.createForClass(Client);

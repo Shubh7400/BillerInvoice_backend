@@ -4,6 +4,8 @@ import {
   IsNumber,
   IsEmail,
   IsNotEmpty,
+  ArrayNotEmpty,
+  IsOptional,
 } from 'class-validator';
 
 export class ClientDto {
@@ -16,11 +18,7 @@ export class ClientDto {
   gistin: string;
 
   @IsString()
-  @IsNotEmpty()
-  contactNo: string;
-
-  @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   pancardNo: string;
 
   @IsObject()
@@ -32,10 +30,8 @@ export class ClientDto {
     postalCode: string;
     country: string;
   };
-  @IsNumber()
-  @IsNotEmpty()
-  conversionRate: number;
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
+
+  @ArrayNotEmpty()
+  @IsEmail({}, { each: true })
+  email: string[];
 }

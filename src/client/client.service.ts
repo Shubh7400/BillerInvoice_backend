@@ -13,7 +13,7 @@ import { UpdateClientDto } from './dto/updateClientDto';
 
 @Injectable()
 export class ClientService {
-  constructor(@InjectModel(Client.name) private clientModel: Model<Client>) {}
+  constructor(@InjectModel(Client.name) private clientModel: Model<Client>) { }
   async createClient(createClientDto: ClientDto, user: User) {
     const newClient = createClientDto.clientName.trim();
     if (newClient.length === 0) {
@@ -31,9 +31,7 @@ export class ClientService {
           { user: user._id },
           { sameState: sameState },
         );
-
         const newClient = await this.clientModel.create(data);
-
         return newClient;
       } catch (error) {
         throw new NotFoundException('Client with this name already exists');
