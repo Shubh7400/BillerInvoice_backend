@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsEmail,
   IsNotEmpty,
+  ArrayNotEmpty,
 } from 'class-validator';
 
 export class UpdateClientDto {
@@ -16,10 +17,6 @@ export class UpdateClientDto {
   @IsOptional()
   @IsString()
   gistin?: string;
-
-  @IsOptional()
-  @IsString()
-  contactNo?: string;
 
   @IsOptional()
   @IsString()
@@ -35,10 +32,7 @@ export class UpdateClientDto {
     country: string;
   };
 
-  @IsOptional()
-  @IsNumber()
-  conversionRate?: number;
-  @IsEmail()
-  @IsOptional()
-  email?: string;
+  @ArrayNotEmpty()
+  @IsEmail({}, { each: true })
+  email: string[];
 }

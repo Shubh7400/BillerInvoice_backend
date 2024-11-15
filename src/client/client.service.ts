@@ -13,7 +13,7 @@ import { UpdateClientDto } from './dto/updateClientDto';
 
 @Injectable()
 export class ClientService {
-  constructor(@InjectModel(Client.name) private clientModel: Model<Client>) { }
+  constructor(@InjectModel(Client.name) private clientModel: Model<Client>) {}
   async createClient(createClientDto: ClientDto, user: User) {
     const newClient = createClientDto.clientName.trim();
     if (newClient.length === 0) {
@@ -64,6 +64,7 @@ export class ClientService {
         HttpStatus.BAD_REQUEST,
       );
     } else {
+      updateClientDto;
       updateClientDto.clientName = newClient;
       try {
         await this.clientModel.findByIdAndUpdate(id, updateClientDto);

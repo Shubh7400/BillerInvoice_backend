@@ -38,6 +38,7 @@ export class ClientController {
     @Param('id') id: string,
     @Body() updateDto: UpdateClientDto,
   ) {
+    console.log(updateDto, ' <<<<<<<<<<<');
     return this.clientService.updateClientById(id, updateDto);
   }
   @UseGuards(AuthGuard())
