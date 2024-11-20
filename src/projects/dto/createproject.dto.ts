@@ -10,9 +10,9 @@ export class CreateProjectDto {
   @IsNotEmpty()
   projectName: string;
 
-  @IsOptional()
-  @IsString()
-  projectManager?: string;
+  // @IsOptional()
+  // @IsString()
+  // projectManager?: string;
 
   @IsOptional()
   @IsNumber()
@@ -26,12 +26,12 @@ export class CreateProjectDto {
   @IsNotEmpty()
   adminId: string;
 
-  @IsOptional()
-  @IsString()
-  workingPeriod?: string;
+  // @IsOptional()
+  // @IsString()
+  // workingPeriod?: string;
 
   @IsOptional()
-  workingPeriodType?: 'hours' | 'days';
+  workingPeriodType?: 'hours' | 'days' | 'fixed';
 
   @IsMongoId()
   @IsNotEmpty()
@@ -44,6 +44,6 @@ export class CreateProjectDto {
   currencyType?: 'rupees' | 'dollars' | 'pounds';
   @IsOptional()
   description?: string;
-  @IsOptional()
-  projectPeriod?: number;
+  // @IsOptional()
+  // projectPeriod?: number;
 }

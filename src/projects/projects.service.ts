@@ -15,7 +15,7 @@ import { User } from 'src/auth/schemas/user';
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private readonly projectModel: Model<Project>,
-  ) { }
+  ) {}
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
     const newProjectName = createProjectDto.projectName.trim();
     if (newProjectName.length === 0) {
@@ -27,13 +27,13 @@ export class ProjectsService {
       console.log(createProjectDto.projectName === newProjectName);
       createProjectDto.projectName = newProjectName;
       try {
-        console.log(createProjectDto);
         if (this.calculateAmount(createProjectDto)) {
           const amount = this.calculateAmount(createProjectDto);
           const data = {
             ...createProjectDto,
             amount,
           };
+          console.log(data, ' <<<<<<<<<');
           return await this.projectModel.create(data);
         } else {
           const project = new this.projectModel({
