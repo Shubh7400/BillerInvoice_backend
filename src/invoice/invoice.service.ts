@@ -163,10 +163,10 @@ export class InvoiceService {
                     workingPeriod: '$projects.workingPeriod',
                     workingPeriodType: '$projects.workingPeriodType',
                     conversionRate:'$projects.conversionRate',
+                    clientId:'$projects.clientId'
                 },
             },
         ]);
-        // console.log('Invoices Found:', data);
 
         if (!data.length) {
             throw new NotFoundException('No invoices or projects found for the specified month and year.');
