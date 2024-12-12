@@ -152,5 +152,75 @@ export class InvoiceService {
       throw new NotFoundException('Unable to get invoice counts for the specified year.');
     }
   }
+  
+  async getProjectsByYearAndMonth(year: string, month: string, userId: string) {
+    const startDate = new Date(`${year}-${month}-01`);
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + 1);
+
+    console.log('Start Date:', startDate);
+    console.log('End Date:', endDate);
+    console.log('User ID:', userId);
+
+    try {
+        const data = await this.invoiceModel.aggregate([
+            {
+                $match: {
+                    adminId: new Types.ObjectId(userId),
+                    billDate: { $gte: startDate, $lt: endDate },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'projects',
+                    localField: 'projectsId', 
+                    foreignField: '_id', 
+                    as: 'projects', 
+                },
+            },
+            {
+                $unwind: {
+                    path: '$projects', 
+                    preserveNullAndEmptyArrays: true, 
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    invoiceId: '$_id',
+                    invoiceNo: 1,
+                    billDate: 1,
+                    dueDate: 1,
+                    amountWithoutTax: 1,
+                    amountAfterTax: 1,
+                    projectId:'$projects._id',
+                    projectName: '$projects.projectName',
+                    rate: '$projects.rate',
+                    projectManager: '$projects.projectManager',
+                    currencyType: '$projects.currencyType',
+                    workingPeriod: '$projects.workingPeriod',
+                    workingPeriodType: '$projects.workingPeriodType',
+                    conversionRate:'$projects.conversionRate',
+                },
+            },
+        ]);
+        // console.log('Invoices Found:', data);
+
+        if (!data.length) {
+            throw new NotFoundException('No invoices or projects found for the specified month and year.');
+        }
+
+        return {
+            year,
+            month,
+            data,
+            totalProjects: data.length,
+        };
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw new Error('Failed to fetch combined project and invoice data');
+    }
+}
+
 
 }

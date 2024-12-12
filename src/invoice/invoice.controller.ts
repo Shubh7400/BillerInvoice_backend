@@ -13,6 +13,7 @@ import { InvoiceService } from './invoice.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateInvoiceDto } from './dto/createInvoice.dto';
 import { UpdateInvoiceDto } from './dto/updateInvoice.dto';
+import { GetProjectsByYearAndMonthDto } from './dto/getProjectByMonth.dto';
 @Controller('invoice')
 export class InvoiceController {
   constructor(private invoiceService: InvoiceService) { }
@@ -30,6 +31,17 @@ export class InvoiceController {
   @UseGuards(AuthGuard())
   getInvoiceCountByYear(@Query('year') year: string, @Query('user') user: string) {
     return this.invoiceService.getInvoiceCountByYear(year, user);
+  }
+
+  @Get('/projects-by-month')
+  @UseGuards(AuthGuard())
+  getProjectsByYearAndMonth(@Query() query: GetProjectsByYearAndMonthDto,
+  @Req() req,
+  ) {
+    const { year, month } = query;
+
+    console.log('Controller Year:', year, 'Month:', month); 
+    return this.invoiceService.getProjectsByYearAndMonth(year, month,req.user.id);
   }
 
   @Get(':id')

@@ -2,14 +2,14 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { User } from 'src/auth/schemas/user';
 import { Client } from 'src/client/schemas/clients';
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, collection: 'projects' })
 export class Project extends Document {
   @Prop()
   projectName: string;
   @Prop()
   rate: number;
-  @Prop()
-  projectManager: string;
+  // @Prop()
+  // projectManager: string;
   @Prop()
   description: string;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })

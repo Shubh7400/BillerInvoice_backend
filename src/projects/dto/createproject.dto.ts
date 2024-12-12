@@ -10,9 +10,9 @@ export class CreateProjectDto {
   @IsNotEmpty()
   projectName: string;
 
-  @IsOptional()
-  @IsString()
-  projectManager?: string;
+  // @IsOptional()
+  // @IsString()
+  // projectManager?: string;
 
   @IsOptional()
   @IsNumber()
@@ -26,9 +26,9 @@ export class CreateProjectDto {
   @IsNotEmpty()
   adminId: string;
 
-  @IsOptional()
-  @IsString()
-  workingPeriod?: string;
+  // @IsOptional()
+  // @IsString()
+  // workingPeriod?: string;
 
   @IsOptional()
   workingPeriodType?: 'hours' | 'months';
