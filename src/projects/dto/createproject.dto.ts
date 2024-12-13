@@ -26,12 +26,12 @@ export class CreateProjectDto {
   @IsNotEmpty()
   adminId: string;
 
-  // @IsOptional()
-  // @IsString()
-  // workingPeriod?: string;
+  @IsOptional()
+  @IsString()
+  workingPeriod?: string;
 
   @IsOptional()
-  workingPeriodType?: 'hours' | 'months';
+  workingPeriodType?: 'hours' | 'months' |'fixed';
 
   @IsMongoId()
   @IsNotEmpty()
