@@ -8,16 +8,16 @@ export class Project extends Document {
   projectName: string;
   @Prop()
   rate: number;
-  @Prop()
-  projectManager: string;
+  // @Prop()
+  // projectManager: string;
   @Prop()
   description: string;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   adminId: User;
   @Prop()
-  workingPeriodType: 'hours' | 'days';
-  @Prop()
-  workingPeriod: string;
+  workingPeriodType: 'hours' | 'days' | 'fixed';
+  // @Prop()
+  // workingPeriod: string;
   @Prop()
   conversionRate: number;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Client' })
@@ -28,7 +28,7 @@ export class Project extends Document {
   paymentStatus: string;
   @Prop()
   currencyType: 'rupees' | 'dollars' | 'pounds';
-  @Prop()
-  projectPeriod: number;
+  // @Prop()
+  // projectPeriod: number;
 }
 export const ProjectSchema = SchemaFactory.createForClass(Project);
