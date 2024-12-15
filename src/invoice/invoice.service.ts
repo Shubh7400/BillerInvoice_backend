@@ -163,10 +163,10 @@ export class InvoiceService {
                     workingPeriod: '$projects.workingPeriod',
                     workingPeriodType: '$projects.workingPeriodType',
                     conversionRate:'$projects.conversionRate',
+                    clientId:'$projects.clientId'
                 },
             },
         ]);
-        // console.log('Invoices Found:', data);
 
         if (!data.length) {
             throw new NotFoundException('No invoices or projects found for the specified month and year.');
@@ -184,5 +184,67 @@ export class InvoiceService {
     }
 }
 
+async getInvoicesByDateRange(
+  fromYear: string,
+  fromMonth: string,
+  toYear: string,
+  toMonth: string,
+  userId: string,
+) {
+  const fromDate = new Date(`${fromYear}-${fromMonth}-01`);
+  const toDate = new Date(`${toYear}-${toMonth}-01`);
+  toDate.setMonth(toDate.getMonth() + 1);
 
+  try {
+    const invoices = await this.invoiceModel.aggregate([
+      {
+        $match: {
+          adminId: new Types.ObjectId(userId),
+          billDate: {
+            $gte: fromDate,
+            $lt: toDate,
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'projects',
+          localField: 'projectsId',
+          foreignField: '_id',
+          as: 'projects',
+        },
+      },
+      {
+        $unwind: {
+          path: '$projects',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          invoiceId: '$_id',
+          invoiceNo: 1,
+          billDate: 1,
+          dueDate: 1,
+          amountWithoutTax: 1,
+          amountAfterTax: 1,
+          projectId:'$projects._id',
+          projectName: '$projects.projectName',
+          rate: '$projects.rate',
+          projectManager: '$projects.projectManager',
+          currencyType: '$projects.currencyType',
+          workingPeriod: '$projects.workingPeriod',
+          workingPeriodType: '$projects.workingPeriodType',
+          conversionRate:'$projects.conversionRate',
+          clientId:'$projects.clientId'
+      },
+      },
+    ]);
+
+    return invoices;
+  } catch (error) {
+    throw new Error('Failed to fetch invoices by date range');
+  }
+}
 }
