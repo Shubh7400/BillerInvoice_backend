@@ -75,23 +75,6 @@ export class InvoiceService {
     }
   }
 
-  // async updateInvoice(id: string, updateInvoiceDto: Partial<CreateInvoiceDto>) {
-  //   try {
-  //     const invoice = await this.invoiceModel.findById(id);
-
-  //     if (!invoice) {
-  //       throw new NotFoundException('Invoice does not exist');
-  //     }
-
-  //     // Update the invoice with the provided data
-  //     Object.assign(invoice, updateInvoiceDto);
-
-  //     await invoice.save();
-  //     return invoice;
-  //   } catch (error) {
-  //     throw new Error('Error updating invoice');
-  //   }
-  // }
   async updateInvoice(id: string, updateInvoiceDto: Partial<CreateInvoiceDto>) {
     try {
       const invoice = await this.invoiceModel.findById(id);

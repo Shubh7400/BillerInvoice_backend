@@ -31,7 +31,7 @@ export class UpdateProjectDto {
   workingPeriod?: string;
 
   @IsOptional()
-  workingPeriodType?: 'hours' | 'months';
+  workingPeriodType?: 'hours' | 'months'|'fixed';
 
   @IsMongoId()
   @IsOptional()

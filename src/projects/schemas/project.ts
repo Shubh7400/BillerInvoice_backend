@@ -15,7 +15,7 @@ export class Project extends Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   adminId: User;
   @Prop()
-  workingPeriodType: 'hours' | 'months';
+  workingPeriodType: 'hours' | 'months'|'fixed';
   @Prop()
   workingPeriod: string;
   @Prop()
