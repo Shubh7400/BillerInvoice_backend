@@ -21,6 +21,8 @@ export class Invoice extends Document {
   amountWithoutTax: number;
   @Prop()
   amountAfterTax: number;
+  @Prop()
+  taxType: number;
   // @Prop()
   // // cgst: number;
   // // @Prop()

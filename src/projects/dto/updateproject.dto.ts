@@ -31,7 +31,7 @@ export class UpdateProjectDto {
   workingPeriod?: string;
 
   @IsOptional()
-  workingPeriodType?: 'hours' | 'days';
+  workingPeriodType?: 'hours' | 'months'|'fixed';
 
   @IsMongoId()
   @IsOptional()
@@ -46,4 +46,9 @@ export class UpdateProjectDto {
   description: string;
   @IsOptional()
   projectPeriod: number;
+  @IsOptional()
+  ratePerDay: number;
+  @IsOptional()
+  @IsNumber()
+  advanceAmount?: number; // Add advance amount field
 }

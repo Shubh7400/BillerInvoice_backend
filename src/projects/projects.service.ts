@@ -32,6 +32,8 @@ export class ProjectsService {
           const data = {
             ...createProjectDto,
             amount,
+            advanceAmount: createProjectDto.advanceAmount || 0, // Default to 0 if not provided
+
           };
           console.log(data, ' <<<<<<<<<');
           return await this.projectModel.create(data);
@@ -87,6 +89,8 @@ export class ProjectsService {
         const data = {
           ...updateProjectDto,
           amount,
+          advanceAmount: updateProjectDto.advanceAmount || 0, // Default to 0 if not provided
+
         };
         console.log({ data });
         await this.projectModel.findByIdAndUpdate(id, data);
@@ -119,6 +123,7 @@ export class ProjectsService {
       workingPeriod,
       workingPeriodType,
       projectPeriod,
+      ratePerDay,
       conversionRate,
     } = dto;
     console.log(workingPeriod);
@@ -133,10 +138,10 @@ export class ProjectsService {
       } else {
         return null;
       }
-    } else if (workingPeriodType === 'days') {
+    } else if (workingPeriodType === 'months') {
       if (rate && workingPeriod && conversionRate && projectPeriod) {
         const amount =
-          (rate / projectPeriod) * parseFloat(workingPeriod) * conversionRate;
+          (rate / projectPeriod) * ratePerDay * parseFloat(workingPeriod) * conversionRate;
         return +amount.toFixed(2);
       } else {
         return null;

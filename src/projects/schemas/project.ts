@@ -15,20 +15,25 @@ export class Project extends Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   adminId: User;
   @Prop()
-  workingPeriodType: 'hours' | 'days' | 'fixed';
-  // @Prop()
-  // workingPeriod: string;
+  workingPeriodType: 'hours' | 'months'|'fixed';
+  @Prop()
+  workingPeriod: string;
   @Prop()
   conversionRate: number;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Client' })
   clientId: Client;
-  @Prop()
+  @Prop()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
   amount: number;
+  @Prop()
+  advanceAmount: number; // New field added for advance amount
   @Prop()
   paymentStatus: string;
   @Prop()
   currencyType: 'rupees' | 'dollars' | 'pounds';
-  // @Prop()
-  // projectPeriod: number;
+  @Prop()
+  projectPeriod: number;
+  @Prop()
+  ratePerDay: number;
+ 
 }
 export const ProjectSchema = SchemaFactory.createForClass(Project);
