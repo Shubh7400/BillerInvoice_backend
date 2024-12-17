@@ -44,6 +44,24 @@ export class InvoiceController {
     return this.invoiceService.getProjectsByYearAndMonth(year, month,req.user.id);
   }
 
+  @Get('/invoices-by-date-range')
+  @UseGuards(AuthGuard())
+  getInvoicesByDateRange(
+    @Query('fromYear') fromYear: string,
+    @Query('fromMonth') fromMonth: string,
+    @Query('toYear') toYear: string,
+    @Query('toMonth') toMonth: string,
+    @Req() req,
+  ) {
+    return this.invoiceService.getInvoicesByDateRange(
+      fromYear,
+      fromMonth,
+      toYear,
+      toMonth,
+      req.user.id,
+    );
+  }
+
   @Get(':id')
   @UseGuards(AuthGuard())
   getInvoiceById(@Param('id') id: string) {
