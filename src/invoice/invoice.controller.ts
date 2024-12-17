@@ -3,6 +3,7 @@ import {
   Post,
   UseGuards,
   Get,
+  Patch,
   Body,
   Param,
   Req,
@@ -11,6 +12,7 @@ import {
 import { InvoiceService } from './invoice.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateInvoiceDto } from './dto/createInvoice.dto';
+import { UpdateInvoiceDto } from './dto/updateInvoice.dto';
 import { GetProjectsByYearAndMonthDto } from './dto/getProjectByMonth.dto';
 @Controller('invoice')
 export class InvoiceController {
@@ -65,4 +67,15 @@ export class InvoiceController {
   getInvoiceById(@Param('id') id: string) {
     return this.invoiceService.getInvoiceById(id);
   }
+
+
+  @Patch(':id') // Route to handle updates
+  @UseGuards(AuthGuard())
+  updateInvoice(
+    @Param('id') id: string,
+    @Body() updateInvoiceDto: Partial<CreateInvoiceDto>
+  ) {
+    return this.invoiceService.updateInvoice(id, updateInvoiceDto);
+  }
 }
+

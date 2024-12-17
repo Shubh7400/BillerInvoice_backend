@@ -26,12 +26,12 @@ export class CreateProjectDto {
   @IsNotEmpty()
   adminId: string;
 
-  // @IsOptional()
-  // @IsString()
-  // workingPeriod?: string;
+  @IsOptional()
+  @IsString()
+  workingPeriod?: string;
 
   @IsOptional()
-  workingPeriodType?: 'hours' | 'days' | 'fixed';
+  workingPeriodType?: 'hours' | 'months' |'fixed';
 
   @IsMongoId()
   @IsNotEmpty()
@@ -44,6 +44,12 @@ export class CreateProjectDto {
   currencyType?: 'rupees' | 'dollars' | 'pounds';
   @IsOptional()
   description?: string;
-  // @IsOptional()
-  // projectPeriod?: number;
+  @IsOptional()
+  projectPeriod?: number;
+  @IsOptional()
+  ratePerDay?: number;
+
+  @IsOptional()
+  @IsNumber()
+  advanceAmount?: number; // Add advance amount field
 }
