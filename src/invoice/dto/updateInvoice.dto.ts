@@ -1,4 +1,4 @@
-import { IsDateString, IsMongoId, IsNumber, IsOptional } from 'class-validator';
+import { IsDateString, IsMongoId, IsNumber, IsOptional,IsString } from 'class-validator';
 
 export class UpdateInvoiceDto {
   @IsNumber()
@@ -32,4 +32,8 @@ export class UpdateInvoiceDto {
   @IsNumber()
   @IsOptional()
   amountAfterTax?: number;
+
+  @IsString()
+  @IsOptional()
+  taxType?: string; 
 }

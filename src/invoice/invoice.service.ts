@@ -205,7 +205,7 @@ export class InvoiceService {
             dueDate: 1,
             amountWithoutTax: 1,
             amountAfterTax: 1,
-            taxType:"",
+            taxType: "$taxType",
             projectId: '$projects._id',
             projectName: '$projects.projectName',
             rate: '$projects.rate',

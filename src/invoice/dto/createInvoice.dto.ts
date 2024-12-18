@@ -1,4 +1,4 @@
-import { IsDateString, IsMongoId, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsDateString, IsMongoId, IsNotEmpty, IsNumber,IsString,IsOptional } from 'class-validator';
 
 export class CreateInvoiceDto {
   @IsNumber()
@@ -33,4 +33,8 @@ export class CreateInvoiceDto {
   @IsNumber()
   @IsNotEmpty()
   amountAfterTax: number;
+
+  @IsString()
+  @IsOptional() 
+  taxType?: string; 
 }

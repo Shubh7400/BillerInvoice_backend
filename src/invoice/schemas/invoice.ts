@@ -22,10 +22,10 @@ export class Invoice extends Document {
   @Prop()
   amountAfterTax: number;
   @Prop()
-  taxType: number;
+  taxType: "igst" | "sgst_cgst";
   // @Prop()
-  // // cgst: number;
-  // // @Prop()
-  // // sgst: number;
+  // cgst: number;
+  // @Prop()
+  // sgst: number;
 }
 export const InvoiceSchema = SchemaFactory.createForClass(Invoice);
