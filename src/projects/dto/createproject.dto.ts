@@ -27,8 +27,8 @@ export class CreateProjectDto {
   adminId: string;
 
   @IsOptional()
-  @IsString()
-  workingPeriod?: string;
+  @IsNumber()
+  workingPeriod?: number;
 
   @IsOptional()
   workingPeriodType?: 'hours' | 'months' |'fixed';

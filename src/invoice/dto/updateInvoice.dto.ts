@@ -1,4 +1,4 @@
-import { IsDateString, IsMongoId, IsNumber, IsOptional } from 'class-validator';
+import { IsDateString, IsMongoId, IsNumber, IsOptional,IsString,IsNotEmpty} from 'class-validator';
 
 export class UpdateInvoiceDto {
   @IsNumber()
@@ -32,4 +32,58 @@ export class UpdateInvoiceDto {
   @IsNumber()
   @IsOptional()
   amountAfterTax?: number;
+
+  @IsOptional()
+  @IsNumber()
+  // workingPeriod?: string;
+  workingPeriod?: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  conversionRate: number;
+
+  @IsOptional()
+  @IsNotEmpty()
+  projectName?: string;
+
+  @IsOptional()
+  projectManager?: string;
+
+  @IsOptional()
+  @IsNumber()
+  rate?: number;
+
+  @IsOptional()
+  workingPeriodType?: 'hours' | 'months'|'fixed';
+
+  @IsOptional()
+  paymentStatus?: boolean;
+
+  @IsOptional()
+  currencyType?: 'rupees' | 'dollars' | 'pounds';
+  @IsOptional()
+  description: string;
+  @IsOptional()
+  projectPeriod: number;
+  @IsOptional()
+  ratePerDay: number;
+  @IsOptional()
+  @IsNumber()
+  advanceAmount?: number; // Add advance amount field
+
+
+  @IsOptional()
+  @IsNumber()
+  taxAmount?: number;
+
+  @IsOptional()
+  @IsNumber()
+  grandTotal?: number;
+
+
+  @IsOptional()
+  @IsString()
+  taxType?: string;
+
+
 }
