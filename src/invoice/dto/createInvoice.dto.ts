@@ -1,4 +1,4 @@
-import { IsDateString, IsMongoId, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsDateString, IsMongoId, IsNotEmpty, IsNumber ,IsOptional,IsString} from 'class-validator';
 
 export class CreateInvoiceDto {
   @IsNumber()
@@ -21,6 +21,7 @@ export class CreateInvoiceDto {
   @IsNotEmpty()
   adminId: string;
 
+
   @IsMongoId({ each: true })
   // @ValidateNested({ each: true })
   // @Type(() => String)
@@ -33,4 +34,60 @@ export class CreateInvoiceDto {
   @IsNumber()
   @IsNotEmpty()
   amountAfterTax: number;
+
+  @IsOptional()
+  @IsNumber()
+  // workingPeriod?: string;
+  workingPeriod?: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  conversionRate: number;
+
+  @IsNotEmpty()
+  projectName: string;
+
+  // @IsOptional()
+  // @IsString()
+  // projectManager?: string;
+
+  @IsOptional()
+  @IsNumber()
+  rate?: number;
+
+  @IsOptional()
+  workingPeriodType?: 'hours' | 'months' |'fixed';
+
+
+  // @IsNotEmpty()
+  // paymentStatus: boolean;
+   @IsOptional()
+  paymentStatus: boolean;
+
+  @IsOptional()
+  currencyType?: 'rupees' | 'dollars' | 'pounds';
+  @IsOptional()
+  description?: string;
+  @IsOptional()
+  projectPeriod?: number;
+  @IsOptional()
+  ratePerDay?: number;
+
+  @IsOptional()
+  @IsNumber()
+  advanceAmount?: number;
+
+  @IsOptional()
+  @IsNumber()
+  taxAmount?: number;
+
+  @IsOptional()
+  @IsNumber()
+  grandTotal?: number;
+
+
+  @IsOptional()
+  @IsString()
+  taxType?: string;
+
 }
