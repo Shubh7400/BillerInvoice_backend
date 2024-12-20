@@ -35,7 +35,6 @@ export class UpdateInvoiceDto {
 
   @IsOptional()
   @IsNumber()
-  // workingPeriod?: string;
   workingPeriod?: number;
 
   @IsNumber()
