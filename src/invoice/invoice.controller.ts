@@ -41,7 +41,7 @@ export class InvoiceController {
     const { year, month } = query;
 
     console.log('Controller Year:', year, 'Month:', month); 
-    return this.invoiceService.getProjectsByYearAndMonth(year, month,req.user.id);
+    return this.invoiceService.getInvoicesByYearAndMonth(year, month,req.user.id);
   }
 
   @Get('/invoices-by-date-range')

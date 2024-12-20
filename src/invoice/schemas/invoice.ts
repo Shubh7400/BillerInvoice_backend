@@ -21,10 +21,44 @@ export class Invoice extends Document {
   amountWithoutTax: number;
   @Prop()
   amountAfterTax: number;
+
+  // for project
   @Prop()
-  taxType: "igst" | "sgst_cgst";
+  projectName: string;
+  @Prop()
+  rate: number;
   // @Prop()
-  // cgst: number;
+  // projectManager: string;
+  @Prop()
+  description: string;
+  @Prop()
+  workingPeriodType: 'hours' | 'months'|'fixed';
+  @Prop()
+  workingPeriod: number;
+  @Prop()
+  conversionRate: number;
+  @Prop()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  amount: number;
+  @Prop()
+  advanceAmount: number; // New field added for advance amount
+  @Prop()
+  paymentStatus: string;
+  @Prop()
+  currencyType: 'rupees' | 'dollars' | 'pounds';
+  @Prop()
+  projectPeriod: number;
+  @Prop()
+  ratePerDay: number;
+  @Prop()
+  taxAmount: number;
+  @Prop()
+  grandTotal: number;
+  @Prop()
+  taxType: "cgst" | "igst" | "sgst";
+  // @Prop()
+  // workingPeriod: number;
+  // @Prop()
+  // conversionRate: number;
   // @Prop()
   // sgst: number;
 }
