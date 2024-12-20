@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
   ArrayNotEmpty,
   IsOptional,
+  isString,
 } from 'class-validator';
 
 export class ClientDto {
@@ -20,6 +21,10 @@ export class ClientDto {
   @IsString()
   @IsOptional()
   pancardNo: string;
+
+  @IsString()
+  @IsOptional()
+  contactNo: string;
 
   @IsObject()
   @IsNotEmpty()
