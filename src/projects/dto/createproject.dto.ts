@@ -4,6 +4,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsBoolean,
 } from 'class-validator';
 
 export class CreateProjectDto {
@@ -51,5 +52,38 @@ export class CreateProjectDto {
 
   @IsOptional()
   @IsNumber()
-  advanceAmount?: number; // Add advance amount field
+  advanceAmount?: number; 
+
+  // New fields added
+  @IsOptional()
+  @IsString()
+  paymentCycle?: string;
+
+  @IsOptional()
+  @IsString()
+  billingCycle?: 'hours' | 'months' | 'fixed';
+
+  @IsOptional()
+  @IsString()
+  technology?: string;
+
+  @IsOptional()
+  @IsNumber()
+  paidLeave?: number;
+
+  @IsOptional()
+  @IsString()
+  timeSheet?: string;
+
+  @IsOptional()
+  @IsString()
+  candidateName?: string;
+
+  @IsOptional()
+  @IsString()
+  startDate?: string;
+
+  @IsOptional()
+  @IsString()
+  endDate?: string;
 }

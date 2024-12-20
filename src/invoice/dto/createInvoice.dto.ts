@@ -21,7 +21,6 @@ export class CreateInvoiceDto {
   @IsNotEmpty()
   adminId: string;
 
-
   @IsMongoId({ each: true })
   // @ValidateNested({ each: true })
   // @Type(() => String)
@@ -37,7 +36,6 @@ export class CreateInvoiceDto {
 
   @IsOptional()
   @IsNumber()
-  // workingPeriod?: string;
   workingPeriod?: number;
 
   @IsNumber()
@@ -57,7 +55,6 @@ export class CreateInvoiceDto {
 
   @IsOptional()
   workingPeriodType?: 'hours' | 'months' |'fixed';
-
 
   // @IsNotEmpty()
   // paymentStatus: boolean;
@@ -84,7 +81,6 @@ export class CreateInvoiceDto {
   @IsOptional()
   @IsNumber()
   grandTotal?: number;
-
 
   @IsOptional()
   @IsString()

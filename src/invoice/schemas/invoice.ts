@@ -40,7 +40,7 @@ export class Invoice extends Document {
   @Prop()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
   amount: number;
   @Prop()
-  advanceAmount: number; // New field added for advance amount
+  advanceAmount: number; 
   @Prop()
   paymentStatus: string;
   @Prop()
@@ -55,11 +55,5 @@ export class Invoice extends Document {
   grandTotal: number;
   @Prop()
   taxType: "cgst" | "igst" | "sgst";
-  // @Prop()
-  // workingPeriod: number;
-  // @Prop()
-  // conversionRate: number;
-  // @Prop()
-  // sgst: number;
 }
 export const InvoiceSchema = SchemaFactory.createForClass(Invoice);

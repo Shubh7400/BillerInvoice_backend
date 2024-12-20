@@ -35,5 +35,28 @@ export class Project extends Document {
   @Prop()
   ratePerDay: number;
  
+   @Prop()
+   paymentCycle: string;
+ 
+   @Prop()
+   billingCycle: 'hours' | 'months' | 'fixed';
+ 
+   @Prop()
+   technology: string;
+ 
+   @Prop()
+   paidLeave: number;
+ 
+   @Prop()
+   timeSheet: string;
+ 
+   @Prop()
+   candidateName: string;
+ 
+   @Prop()
+   startDate: string;
+ 
+   @Prop()
+   endDate: string;
 }
 export const ProjectSchema = SchemaFactory.createForClass(Project);
