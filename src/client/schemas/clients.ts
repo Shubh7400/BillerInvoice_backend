@@ -9,6 +9,8 @@ export class Client extends Document {
   gistin: string;
   @Prop()
   pancardNo: string;
+  @Prop()
+  contactNo: string;
   @Prop({ type: Object })
   address: {
     street: string;

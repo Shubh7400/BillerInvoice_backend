@@ -21,6 +21,10 @@ export class ClientDto {
   @IsOptional()
   pancardNo: string;
 
+  @IsString()
+  @IsOptional()
+  contactNo: string;
+
   @IsObject()
   @IsNotEmpty()
   address: {

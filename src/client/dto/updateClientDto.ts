@@ -22,6 +22,10 @@ export class UpdateClientDto {
   @IsString()
   pancardNo?: string;
 
+  @IsString()
+  @IsOptional()
+  contactNo: string;
+
   @IsOptional()
   @IsObject()
   address?: {
