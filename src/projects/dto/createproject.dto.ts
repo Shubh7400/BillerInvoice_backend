@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   IsBoolean,
+  IsArray
 } from 'class-validator';
 
 export class CreateProjectDto {
@@ -20,7 +21,8 @@ export class CreateProjectDto {
   rate?: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  // @IsNotEmpty()
+  @IsOptional()
   conversionRate: number;
 
   @IsMongoId()
@@ -86,4 +88,9 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   endDate?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  fileUrls?: string[];
 }
