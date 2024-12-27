@@ -13,10 +13,14 @@ import { LoginDto } from './dto/login.dto';
 import { UserDto } from './dto/user.dto';
 import { VerifyOtpDto } from './dto/verifyotp.dto';
 import { ForgetPasswordDto } from './dto/forgetpassword.dto';
+import { PartialType } from '@nestjs/mapped-types';
+
+
+
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('/login')
   async login(@Body() loginDto: LoginDto) {
@@ -67,4 +71,25 @@ export class AuthController {
     userDto.ifsc = user.ifsc;
     return userDto;
   }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Patch('/update/:id')
+  async updateUserById(@Param('id') id: string, @Body() updateData: Partial<UserDto>) {
+    const updatedUser = await this.authService.updateUserById(id, updateData);
+    const userDto = new UserDto();
+    userDto.email = updatedUser.email;
+    userDto.password = updatedUser.password;
+    userDto.address = updatedUser.address;
+    userDto.companyName = updatedUser.companyName;
+    userDto.gistin = updatedUser.gistin;
+    userDto.pancardNo = updatedUser.pancardNo;
+    userDto.invoiceNo = updatedUser.invoiceNo;
+    userDto.contactNo = updatedUser.contactNo;
+    userDto.companyLogo = updatedUser.companyLogo;
+    userDto.accountNo = updatedUser.accountNo;
+    userDto.bank = updatedUser.bank;
+    userDto.ifsc = updatedUser.ifsc;
+    return userDto;
+  }
+
 }

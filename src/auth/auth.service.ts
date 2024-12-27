@@ -122,6 +122,23 @@ export class AuthService {
     }
   }
 
+  async updateUserById(id: string, updateData: Partial<User>) {
+    try {
+      const user = await this.userModel.findByIdAndUpdate(
+        id,
+        { $set: updateData },
+        { new: true }, // Returns the updated document
+      );
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+      return user;
+    } catch (error) {
+      throw new Error(`Failed to update user: ${error.message}`);
+    }
+  }
+  
+
   private async sendOTPByEmail(email: string, otp: string): Promise<void> {
     const mailOptions = {
       from: process.env.MAIL_USERNAME,
