@@ -7,6 +7,7 @@ import {
   IsBoolean,
   IsArray
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateProjectDto {
   @IsNotEmpty()
@@ -18,11 +19,13 @@ export class CreateProjectDto {
 
   @IsOptional()
   @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
   rate?: number;
 
   @IsNumber()
   // @IsNotEmpty()
   @IsOptional()
+  @Transform(({ value }) => parseFloat(value))
   conversionRate: number;
 
   @IsMongoId()
@@ -31,6 +34,7 @@ export class CreateProjectDto {
 
   @IsOptional()
   @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
   workingPeriod?: number;
 
   @IsOptional()
@@ -45,15 +49,21 @@ export class CreateProjectDto {
 
   @IsOptional()
   currencyType?: 'rupees' | 'dollars' | 'pounds';
+
   @IsOptional()
   description?: string;
+
   @IsOptional()
+  @Transform(({ value }) => parseFloat(value))
   projectPeriod?: number;
+
   @IsOptional()
+  @Transform(({ value }) => parseFloat(value))
   ratePerDay?: number;
 
   @IsOptional()
   @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
   advanceAmount?: number; 
 
   // New fields added
@@ -71,6 +81,7 @@ export class CreateProjectDto {
 
   @IsOptional()
   @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
   paidLeave?: number;
 
   @IsOptional()
@@ -94,3 +105,4 @@ export class CreateProjectDto {
   @IsString({ each: true })
   fileUrls?: string[];
 }
+
