@@ -101,7 +101,6 @@ export class CreateProjectDto {
   endDate?: string;
 
   @IsOptional()
-  @IsArray()
   @IsString({ each: true })
   fileUrls?: string[];
 }

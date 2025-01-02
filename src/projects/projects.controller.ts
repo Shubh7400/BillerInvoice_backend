@@ -20,12 +20,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('projects')
 export class ProjectsController {
-  // constructor(private projectService: ProjectsService) { }
-  // @Post()
-  // @UseGuards(AuthGuard())
-  // createProject(@Body() createProjectDto: CreateProjectDto) {
-  //   return this.projectService.createProject(createProjectDto);
-  // }
+
   constructor(
     private readonly projectService: ProjectsService,
     private readonly cloudinaryService: CloudinaryService,
@@ -47,7 +42,6 @@ export class ProjectsController {
         files.files.map(file => this.cloudinaryService.uploadFile(file).then(res => res.secure_url)),
       );
     }
-
     // Attach file URLs to DTO
     return this.projectService.createProject({ ...createProjectDto, fileUrls });
   }
@@ -61,14 +55,43 @@ export class ProjectsController {
   getProjectById(@Param('id') id: string) {
     return this.projectService.getProjectById(id);
   }
-  @Patch(':id')
-  @UseGuards(AuthGuard())
-  updateProjectById(
-    @Param('id') id: string,
-    @Body() updateProjectDto: UpdateProjectDto,
-  ) {
-    return this.projectService.updateProjectById(id, updateProjectDto);
+  
+@Patch(':id')
+@UseGuards(AuthGuard())
+@UseInterceptors(FileFieldsInterceptor([
+  { name: 'files', maxCount: 10 }, // Accept up to 10 files
+]))
+async updateProjectById(
+  @Param('id') id: string,
+  @Body() updateProjectDto: UpdateProjectDto,
+  @UploadedFiles() files: { files?: Express.Multer.File[] },
+) {
+  let newFileUrls: string[] = [];
+
+  // Upload new files to Cloudinary and get URLs
+  if (files?.files?.length) {
+    newFileUrls = await Promise.all(
+      files.files.map(file => this.cloudinaryService.uploadFile(file).then(res => res.secure_url)),
+    );
   }
+
+  // Fetch the existing project data to get the current file URLs
+  const existingProject = await this.projectService.getProjectById(id);
+  const existingFileUrls = existingProject.fileUrls || [];
+
+  // Merge existing and new file URLs
+  const allFileUrls = [...existingFileUrls, ...newFileUrls];
+
+  // Update the project data
+  const updatedProjectData = {
+    ...updateProjectDto,
+    fileUrls: allFileUrls, // Set merged file URLs
+  };
+
+  // Call the service to update the project
+  return this.projectService.updateProjectById(id, updatedProjectData);
+}
+
   @Delete(':id')
   @UseGuards(AuthGuard())
   deleteProjectById(@Param('id') id: string) {

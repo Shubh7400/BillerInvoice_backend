@@ -34,7 +34,7 @@ export class Project extends Document {
   projectPeriod: number;
   @Prop()
   ratePerDay: number;
- 
+  
    @Prop()
    paymentCycle: string;
  
