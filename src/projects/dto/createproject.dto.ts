@@ -5,9 +5,10 @@ import {
   IsOptional,
   IsString,
   IsBoolean,
-  IsArray
+  IsArray,
+  ValidateNested
 } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Transform ,Type } from 'class-transformer';
 
 export class CreateProjectDto {
   @IsNotEmpty()
@@ -103,5 +104,6 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString({ each: true })
   fileUrls?: string[];
+  
 }
 

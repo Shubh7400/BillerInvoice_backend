@@ -25,7 +25,7 @@ export class Project extends Document {
   @Prop()                                                                                                
   amount: number;
   @Prop()
-  advanceAmount: number; // New field added for advance amount
+  advanceAmount: number; 
   @Prop()
   paymentStatus: string;
   @Prop()

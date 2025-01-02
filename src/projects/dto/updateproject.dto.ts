@@ -92,7 +92,6 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   endDate?: string;@IsOptional()
-  // @IsArray()
   @IsString({ each: true })
   fileUrls?: string[];
 

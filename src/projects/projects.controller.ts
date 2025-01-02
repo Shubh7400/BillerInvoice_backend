@@ -68,27 +68,27 @@ async updateProjectById(
 ) {
   let newFileUrls: string[] = [];
 
-  // Upload new files to Cloudinary and get URLs
+  
   if (files?.files?.length) {
     newFileUrls = await Promise.all(
       files.files.map(file => this.cloudinaryService.uploadFile(file).then(res => res.secure_url)),
     );
   }
 
-  // Fetch the existing project data to get the current file URLs
+  
   const existingProject = await this.projectService.getProjectById(id);
   const existingFileUrls = existingProject.fileUrls || [];
 
-  // Merge existing and new file URLs
+  
   const allFileUrls = [...existingFileUrls, ...newFileUrls];
 
-  // Update the project data
+  
   const updatedProjectData = {
     ...updateProjectDto,
-    fileUrls: allFileUrls, // Set merged file URLs
+    fileUrls: allFileUrls, 
   };
 
-  // Call the service to update the project
+  
   return this.projectService.updateProjectById(id, updatedProjectData);
 }
 
