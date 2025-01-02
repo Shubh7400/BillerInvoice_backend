@@ -43,7 +43,7 @@ export class UpdateProjectDto {
   clientId?: string;
 
   @IsOptional()
-  paymentStatus?: boolean;
+  paymentStatus?: boolean; 
 
   @IsOptional()
   currencyType?: 'rupees' | 'dollars' | 'pounds';
@@ -95,5 +95,5 @@ export class UpdateProjectDto {
   @IsString({ each: true })
   fileUrls?: string[];
 
-
+  
 }
