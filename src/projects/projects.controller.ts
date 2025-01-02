@@ -17,6 +17,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { UpdateProjectDto } from './dto/updateproject.dto';
 import { CloudinaryService } from './cloudinaryService';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { FileResponseDto,ProjectResponseDto } from './dto/fileupload.Dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+
 
 @Controller('projects')
 export class ProjectsController {
@@ -34,17 +37,23 @@ export class ProjectsController {
   async createProject(
     @Body() createProjectDto: CreateProjectDto,
     @UploadedFiles() files: { files?: Express.Multer.File[] },
-  ) {
-    let fileUrls: string[] = [];
+  ): Promise<ProjectResponseDto> {
+    let uploadedFiles: FileResponseDto[] = [];
+    console.log('Received files while create:', files); // Log the files to debug
 
     if (files?.files?.length) {
-      fileUrls = await Promise.all(
-        files.files.map(file => this.cloudinaryService.uploadFile(file).then(res => res.secure_url)),
+      uploadedFiles = await Promise.all(
+        files.files.map(async (file) => {
+          const uploadResult = await this.cloudinaryService.uploadFile(file);
+          return { filename: file.originalname, url: uploadResult.secure_url };
+        }),
       );
     }
-    // Attach file URLs to DTO
-    return this.projectService.createProject({ ...createProjectDto, fileUrls });
+    const fileUrls = uploadedFiles.map(file => file.url);
+    const project = await this.projectService.createProject({ ...createProjectDto, fileUrls });
+    return { project, uploadedFiles };
   }
+
   @Get('/client/:id')
   @UseGuards(AuthGuard())
   getAllProjects(@Param('id') id: string) {
@@ -55,43 +64,45 @@ export class ProjectsController {
   getProjectById(@Param('id') id: string) {
     return this.projectService.getProjectById(id);
   }
-  
+
 @Patch(':id')
-@UseGuards(AuthGuard())
-@UseInterceptors(FileFieldsInterceptor([
-  { name: 'files', maxCount: 10 }, // Accept up to 10 files
-]))
+ @UseInterceptors(FileFieldsInterceptor([
+    { name: 'files', maxCount: 10 }, // Accept up to 10 files
+  ]))
 async updateProjectById(
   @Param('id') id: string,
   @Body() updateProjectDto: UpdateProjectDto,
   @UploadedFiles() files: { files?: Express.Multer.File[] },
-) {
-  let newFileUrls: string[] = [];
+): Promise<ProjectResponseDto> {
+  console.log(updateProjectDto,id,'Received files:', files); // Log the files to debug
+  
+  let newUploadedFiles: FileResponseDto[] = [];
 
-  // Upload new files to Cloudinary and get URLs
   if (files?.files?.length) {
-    newFileUrls = await Promise.all(
-      files.files.map(file => this.cloudinaryService.uploadFile(file).then(res => res.secure_url)),
+    newUploadedFiles = await Promise.all(
+      files.files.map(async (file) => {
+        const uploadResult = await this.cloudinaryService.uploadFile(file);
+        return { filename: file.originalname, url: uploadResult.secure_url };
+      }),
     );
+    console.log("newUploadedFiles",newUploadedFiles)
   }
-
-  // Fetch the existing project data to get the current file URLs
+  
   const existingProject = await this.projectService.getProjectById(id);
-  const existingFileUrls = existingProject.fileUrls || [];
-
-  // Merge existing and new file URLs
-  const allFileUrls = [...existingFileUrls, ...newFileUrls];
-
-  // Update the project data
-  const updatedProjectData = {
-    ...updateProjectDto,
-    fileUrls: allFileUrls, // Set merged file URLs
+  const allFileUrls = [
+    ...(existingProject.fileUrls || []),
+    ...newUploadedFiles.map(file => file.url),
+  ];
+  
+  const updatedProjectData = { ...updateProjectDto, fileUrls: allFileUrls };
+  await this.projectService.updateProjectById(id, updatedProjectData);
+  const updatedProject = await this.projectService.getProjectById(id);
+  
+  return {
+    project: updatedProject,
+    uploadedFiles: newUploadedFiles,
   };
-
-  // Call the service to update the project
-  return this.projectService.updateProjectById(id, updatedProjectData);
 }
-
   @Delete(':id')
   @UseGuards(AuthGuard())
   deleteProjectById(@Param('id') id: string) {
