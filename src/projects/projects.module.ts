@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Project, ProjectSchema } from './schemas/project';
 import { AuthModule } from 'src/auth/auth.module';
 import { User, UserSchema } from 'src/auth/schemas/user';
+import { CloudinaryModule } from './cloudinaryModule';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { User, UserSchema } from 'src/auth/schemas/user';
     AuthModule,
     MongooseModule.forFeature([{ name: Project.name, schema: ProjectSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    CloudinaryModule, // Add CloudinaryModule here
   ],
   controllers: [ProjectsController],
   providers: [ProjectsService],

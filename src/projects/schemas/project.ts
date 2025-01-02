@@ -22,7 +22,7 @@ export class Project extends Document {
   conversionRate: number;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Client' })
   clientId: Client;
-  @Prop()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  @Prop()                                                                                                
   amount: number;
   @Prop()
   advanceAmount: number; // New field added for advance amount
@@ -34,7 +34,7 @@ export class Project extends Document {
   projectPeriod: number;
   @Prop()
   ratePerDay: number;
- 
+  
    @Prop()
    paymentCycle: string;
  
@@ -58,5 +58,8 @@ export class Project extends Document {
  
    @Prop()
    endDate: string;
+
+   @Prop({ type: [String] })
+   fileUrls: string[];
 }
 export const ProjectSchema = SchemaFactory.createForClass(Project);

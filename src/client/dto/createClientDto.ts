@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
   ArrayNotEmpty,
   IsOptional,
+  isString,
 } from 'class-validator';
 
 export class ClientDto {

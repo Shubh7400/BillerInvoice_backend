@@ -24,14 +24,20 @@ export class ClientService {
     } else {
       createClientDto.clientName = newClient;
       try {
-        const sameState: boolean =
-          createClientDto.address.state === user.address.state;
+        // Normalize state strings for comparison
+      const clientState = createClientDto.address.state.trim().toLowerCase();
+      const userState = user.address.state.trim().toLowerCase();
+        // const sameState: boolean =
+        //   createClientDto.address.state === user.address.state;
+        const sameState: boolean = clientState === userState;
         const data = Object.assign(
           createClientDto,
           { user: user._id },
           { sameState: sameState },
         );
         const newClient = await this.clientModel.create(data);
+        console.log('Client State:', clientState, 'User State:', userState, 'Same State:', sameState);
+
         return newClient;
       } catch (error) {
         throw new NotFoundException('Client with this name already exists');

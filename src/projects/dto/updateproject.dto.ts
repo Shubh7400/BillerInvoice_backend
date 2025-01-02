@@ -6,6 +6,7 @@ import {
   IsString,
   IsBoolean,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class UpdateProjectDto {
   @IsOptional()
@@ -17,10 +18,12 @@ export class UpdateProjectDto {
 
   @IsOptional()
   @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
   rate?: number;
 
   @IsNumber()
   @IsOptional()
+  @Transform(({ value }) => parseFloat(value))
   conversionRate?: number;
 
   @IsMongoId()
@@ -29,6 +32,7 @@ export class UpdateProjectDto {
 
   @IsOptional()
   @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
   workingPeriod?: number;
 
   @IsOptional()
@@ -46,11 +50,13 @@ export class UpdateProjectDto {
   @IsOptional()
   description: string;
   @IsOptional()
+  @Transform(({ value }) => parseFloat(value))
   projectPeriod: number;
   @IsOptional()
   ratePerDay: number;
   @IsOptional()
   @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
   advanceAmount?: number; 
 
   @IsOptional()
@@ -67,6 +73,7 @@ export class UpdateProjectDto {
 
   @IsOptional()
   @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
   paidLeave?: number;
 
   
@@ -84,5 +91,10 @@ export class UpdateProjectDto {
 
   @IsOptional()
   @IsString()
-  endDate?: string;
+  endDate?: string;@IsOptional()
+  // @IsArray()
+  @IsString({ each: true })
+  fileUrls?: string[];
+
+
 }
