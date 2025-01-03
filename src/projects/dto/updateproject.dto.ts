@@ -7,6 +7,7 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { FileResponseDto } from './fileupload.Dto';
 
 export class UpdateProjectDto {
   @IsOptional()
@@ -43,7 +44,7 @@ export class UpdateProjectDto {
   clientId?: string;
 
   @IsOptional()
-  paymentStatus?: boolean;
+  paymentStatus?: boolean; 
 
   @IsOptional()
   currencyType?: 'rupees' | 'dollars' | 'pounds';
@@ -91,10 +92,12 @@ export class UpdateProjectDto {
 
   @IsOptional()
   @IsString()
-  endDate?: string;@IsOptional()
-  // @IsArray()
-  @IsString({ each: true })
-  fileUrls?: string[];
+  endDate?: string;
 
+  // @IsString({ each: true })
+  // fileUrls?: string[];
 
+  // @IsOptional()
+  // uploadedFiles?: FileResponseDto[];
+  
 }

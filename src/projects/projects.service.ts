@@ -16,6 +16,7 @@ export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private readonly projectModel: Model<Project>,
   ) {}
+
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
     const newProjectName = createProjectDto.projectName.trim();
     if (newProjectName.length === 0) {
@@ -24,24 +25,27 @@ export class ProjectsService {
         HttpStatus.BAD_REQUEST,
       );
     } else {
-      console.log(createProjectDto.projectName === newProjectName);
       createProjectDto.projectName = newProjectName;
+  
       try {
+        // Log the DTO to see uploadedFiles
+        console.log("----", createProjectDto);
+  
         if (this.calculateAmount(createProjectDto)) {
           const amount = this.calculateAmount(createProjectDto);
           const data = {
             ...createProjectDto,
             amount,
             advanceAmount: createProjectDto.advanceAmount || 0, // Default to 0 if not provided
-
           };
+  
           console.log(data, ' <<<<<<<<<');
           return await this.projectModel.create(data);
         } else {
           const project = new this.projectModel({
             ...createProjectDto,
           });
-
+  
           return project.save();
         }
       } catch (error) {
@@ -52,6 +56,7 @@ export class ProjectsService {
       }
     }
   }
+  
   async getAllProjects(id: string) {
     try {
       const projects = await this.projectModel.find({ clientId: id });
@@ -106,6 +111,9 @@ export class ProjectsService {
       );
     }
   }
+  
+  
+  
   async deleteProjectById(id: string) {
     try {
       await this.projectModel.findByIdAndDelete(id);

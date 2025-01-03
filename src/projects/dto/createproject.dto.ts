@@ -5,10 +5,11 @@ import {
   IsOptional,
   IsString,
   IsBoolean,
-  IsArray
+  IsArray,
+  ValidateNested
 } from 'class-validator';
-import { Transform } from 'class-transformer';
-
+import { Transform ,Type } from 'class-transformer';
+import { FileResponseDto } from './fileupload.Dto';
 export class CreateProjectDto {
   @IsNotEmpty()
   projectName: string;
@@ -100,8 +101,11 @@ export class CreateProjectDto {
   @IsString()
   endDate?: string;
 
-  @IsOptional()
-  @IsString({ each: true })
-  fileUrls?: string[];
+  // @IsOptional()
+  // @IsString({ each: true })
+  // fileUrls?: string[];
+
+  // @IsOptional()
+  // uploadedFiles?: FileResponseDto[];
 }
 

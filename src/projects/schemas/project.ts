@@ -25,7 +25,7 @@ export class Project extends Document {
   @Prop()                                                                                                
   amount: number;
   @Prop()
-  advanceAmount: number; // New field added for advance amount
+  advanceAmount: number; 
   @Prop()
   paymentStatus: string;
   @Prop()
@@ -59,7 +59,21 @@ export class Project extends Document {
    @Prop()
    endDate: string;
 
-   @Prop({ type: [String] })
-   fileUrls: string[];
+  //  @Prop({ type: [String] })
+  //  fileUrls: string[];
+
+   @Prop({
+    type: [
+      {
+        filename: String,
+        url: String,
+      },
+    ],
+  })
+  uploadedFiles: {
+    filename: string;
+    url: string;
+  }[];
 }
+
 export const ProjectSchema = SchemaFactory.createForClass(Project);
