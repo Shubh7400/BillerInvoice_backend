@@ -9,3 +9,4 @@ export class FileResponseDto {
     updatedProject?: Partial<Project>;
     uploadedFiles: FileResponseDto[];
   }
+  

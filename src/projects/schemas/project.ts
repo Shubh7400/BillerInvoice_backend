@@ -59,7 +59,21 @@ export class Project extends Document {
    @Prop()
    endDate: string;
 
-   @Prop({ type: [String] })
-   fileUrls: string[];
+  //  @Prop({ type: [String] })
+  //  fileUrls: string[];
+
+   @Prop({
+    type: [
+      {
+        filename: String,
+        url: String,
+      },
+    ],
+  })
+  uploadedFiles: {
+    filename: string;
+    url: string;
+  }[];
 }
+
 export const ProjectSchema = SchemaFactory.createForClass(Project);
