@@ -59,9 +59,6 @@ export class Project extends Document {
    @Prop()
    endDate: string;
 
-  //  @Prop({ type: [String] })
-  //  fileUrls: string[];
-
    @Prop({
     type: [
       {

@@ -93,11 +93,4 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   endDate?: string;
-
-  // @IsString({ each: true })
-  // fileUrls?: string[];
-
-  // @IsOptional()
-  // uploadedFiles?: FileResponseDto[];
-  
 }
