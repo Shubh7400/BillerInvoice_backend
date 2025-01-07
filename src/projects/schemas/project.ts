@@ -64,13 +64,17 @@ export class Project extends Document {
       {
         filename: String,
         url: String,
+        imageUrl: String,
       },
     ],
   })
   uploadedFiles: {
     filename: string;
     url: string;
+    imageUrl: string;
   }[];
+
+  
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
