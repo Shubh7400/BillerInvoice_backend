@@ -83,7 +83,6 @@ async createProject(
     return this.projectService.getProjectById(id);
   }
   
-  
   @Patch(':id')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'files', maxCount: 10 }, 
@@ -127,14 +126,6 @@ async createProject(
       uploadedFiles: newUploadedFiles, 
     };
   }
-  
-  
-  
-  
-
-
-
-  
 
   @Delete(':id')
   @UseGuards(AuthGuard())
