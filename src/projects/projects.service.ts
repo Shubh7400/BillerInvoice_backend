@@ -10,12 +10,17 @@ import { Model } from 'mongoose';
 import { CreateProjectDto } from './dto/createproject.dto';
 import { UpdateProjectDto } from './dto/updateproject.dto';
 import { User } from 'src/auth/schemas/user';
+import { Cloudinary } from '@cloudinary/url-gen';
+import * as dotenv from 'dotenv';
+import { v2 as cloudinary } from 'cloudinary'; // Correct import for cloudinary v2
+
+dotenv.config();
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private readonly projectModel: Model<Project>,
-  ) {}
+  ) { }
 
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
     const newProjectName = createProjectDto.projectName.trim();
@@ -26,11 +31,11 @@ export class ProjectsService {
       );
     } else {
       createProjectDto.projectName = newProjectName;
-  
+
       try {
         // Log the DTO to see uploadedFiles
         console.log("----", createProjectDto);
-  
+
         if (this.calculateAmount(createProjectDto)) {
           const amount = this.calculateAmount(createProjectDto);
           const data = {
@@ -38,14 +43,14 @@ export class ProjectsService {
             amount,
             advanceAmount: createProjectDto.advanceAmount || 0, // Default to 0 if not provided
           };
-  
+
           console.log(data, ' <<<<<<<<<');
           return await this.projectModel.create(data);
         } else {
           const project = new this.projectModel({
             ...createProjectDto,
           });
-  
+
           return project.save();
         }
       } catch (error) {
@@ -56,7 +61,7 @@ export class ProjectsService {
       }
     }
   }
-  
+
   async getAllProjects(id: string) {
     try {
       const projects = await this.projectModel.find({ clientId: id });
@@ -65,14 +70,57 @@ export class ProjectsService {
       return error;
     }
   }
+  //  original getProjectById function 
+  // async getProjectById(id: string) {
+  //   try {
+  //     const project = await this.projectModel.findById(id);
+  //     return project;
+  //   } catch (error) {
+  //     throw new NotFoundException('Project does not exists');
+  //   }
+  // }
+
+  // modified getProjectById for converting pdf  to image
   async getProjectById(id: string) {
     try {
       const project = await this.projectModel.findById(id);
+      if (!project) {
+        throw new NotFoundException('Project does not exist');
+      }
+
+      // Transform uploaded files (e.g., PDFs) to include image URLs and retain original file URLs
+      if (project.uploadedFiles && Array.isArray(project.uploadedFiles)) {
+        const cloudinary = new Cloudinary({
+          cloud: {
+            cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+          },
+        });
+
+        project.uploadedFiles = project.uploadedFiles.map((file) => {
+          const publicId = file.url.split('/').pop()?.split('.')[0]; // Extract publicId from URL
+
+          // Generate image URL for the PDF
+          const imageUrl = cloudinary
+            .image(publicId)
+            .format('jpg') // Convert PDF to JPG
+            .toURL();
+
+          return { 
+            filename: file.filename,
+            imageUrl,                // Transformed image URL
+            url: file.url,           // Original file URL for download
+          };
+        });
+      }
+
       return project;
     } catch (error) {
-      throw new NotFoundException('Project does not exists');
+      throw new NotFoundException('Project does not exist');
     }
   }
+
+
+
   async updateProjectById(id: string, updateProjectDto: UpdateProjectDto) {
     if (updateProjectDto.projectName) {
       console.log(updateProjectDto.projectName);
@@ -111,9 +159,9 @@ export class ProjectsService {
       );
     }
   }
-  
-  
-  
+
+
+
   async deleteProjectById(id: string) {
     try {
       await this.projectModel.findByIdAndDelete(id);

@@ -100,12 +100,5 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   endDate?: string;
-
-  // @IsOptional()
-  // @IsString({ each: true })
-  // fileUrls?: string[];
-
-  // @IsOptional()
-  // uploadedFiles?: FileResponseDto[];
 }
 

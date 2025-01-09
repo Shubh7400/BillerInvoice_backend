@@ -228,6 +228,7 @@ export class InvoiceService {
             clientAddress: '$clientData.address',
             sameState: '$clientData.sameState',
             clientEmails: '$clientData.email',
+            clientContactNo: '$clientData.contactNo',
           },
         },
       ]);
@@ -347,6 +348,7 @@ export class InvoiceService {
             clientAddress: '$clientData.address',
             sameState: '$clientData.sameState',
             clientEmails: '$clientData.email',
+            clientContactNo: '$clientData.contactNo',
           },
         },
       ]);

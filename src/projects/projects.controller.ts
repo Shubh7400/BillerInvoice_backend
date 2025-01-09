@@ -11,7 +11,8 @@ import {
   UseInterceptors,
   UploadedFiles,
   HttpException,
-  HttpStatus
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { CreateProjectDto } from './dto/createproject.dto';
 import { ProjectsService } from './projects.service';
@@ -25,6 +26,8 @@ import { NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Project } from 'src/projects/schemas/project';
 import { InjectModel } from '@nestjs/mongoose';
+import { Response } from 'express';
+
 @Controller('projects')
 export class ProjectsController {
 
@@ -35,39 +38,37 @@ export class ProjectsController {
   ) { }
 
   @Post()
-@UseGuards(AuthGuard())
-@UseInterceptors(FileFieldsInterceptor([
-  { name: 'files', maxCount: 10 }, // Accept up to 10 files
-]))
-async createProject(
-  @Body() createProjectDto: CreateProjectDto,
-  @UploadedFiles() files: { files?: Express.Multer.File[] },
-): Promise<ProjectResponseDto> {
-  let uploadedFiles: FileResponseDto[] = [];
+  @UseGuards(AuthGuard())
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'files', maxCount: 10 },
+  ]))
+  async createProject(
+    @Body() createProjectDto: CreateProjectDto,
+    @UploadedFiles() files: { files?: Express.Multer.File[] },
+  ): Promise<ProjectResponseDto> {
+    let uploadedFiles: FileResponseDto[] = [];
 
-  console.log('Received files while create:', files); // Log the files to debug
+    console.log('Received files while create:', files); 
 
-  if (files?.files?.length) {
-    uploadedFiles = await Promise.all(
-      files.files.map(async (file) => {
-        const uploadResult = await this.cloudinaryService.uploadFile(file);
-        return { filename: file.originalname, url: uploadResult.secure_url };
-      }),
-    );
+    if (files?.files?.length) {
+      uploadedFiles = await Promise.all(
+        files.files.map(async (file) => {
+          const uploadResult = await this.cloudinaryService.uploadFile(file);
+          return { filename: file.originalname, url: uploadResult.url};
+        }),
+      );
+    }
+
+    const projectData = {
+      ...createProjectDto,
+      uploadedFiles, 
+    };
+
+    const project = await this.projectService.createProject(projectData);
+
+
+    return { project, uploadedFiles }; 
   }
-
-  // Add uploaded files directly to the project schema
-  const projectData = {
-    ...createProjectDto,
-    uploadedFiles, // Attach the uploaded files directly here
-  };
-
-  const project = await this.projectService.createProject(projectData);
-
-  // Return the project with the uploadedFiles inside the project object
-  return { project, uploadedFiles }; // Ensure uploadedFiles is included in the response
-}
-
 
   @Get('/client/:id')
   @UseGuards(AuthGuard())
@@ -79,64 +80,50 @@ async createProject(
   getProjectById(@Param('id') id: string) {
     return this.projectService.getProjectById(id);
   }
-  
+
   @Patch(':id')
   @UseInterceptors(FileFieldsInterceptor([
-    { name: 'files', maxCount: 10 }, // Accept up to 10 files
+    { name: 'files', maxCount: 10 },
   ]))
   async updateProjectById(
     @Param('id') id: string,
     @Body() updateProjectDto: UpdateProjectDto,
     @UploadedFiles() files: { files?: Express.Multer.File[] },
   ): Promise<ProjectResponseDto> {
-    console.log(updateProjectDto, id, 'Received files:', files); // Log the files to debug
-    
+    console.log(updateProjectDto, id, 'Received files:', files);
+
     let newUploadedFiles: FileResponseDto[] = [];
-  
-    // Process new uploaded files
+
     if (files?.files?.length) {
       newUploadedFiles = await Promise.all(
         files.files.map(async (file) => {
           const uploadResult = await this.cloudinaryService.uploadFile(file);
-          return { filename: file.originalname, url: uploadResult.secure_url };
+          return { filename: file.originalname, url: uploadResult.url};
         }),
       );
       console.log("newUploadedFiles", newUploadedFiles);
     }
-  
-    // Retrieve the existing project
+
     const existingProject = await this.projectService.getProjectById(id);
-  
-    // Combine existing uploaded files with new uploaded files
+
     const combinedUploadedFiles = [
-      ...(existingProject.uploadedFiles || []), // Existing files
-      ...newUploadedFiles, // New uploaded files
+      ...(existingProject.uploadedFiles || []),
+      ...newUploadedFiles,
     ];
-  
-    // Update project data with combined uploadedFiles
-    const updatedProjectData = { 
-      ...updateProjectDto, 
-      uploadedFiles: combinedUploadedFiles, // Only uploadedFiles are updated
+
+    const updatedProjectData = {
+      ...updateProjectDto,
+      uploadedFiles: combinedUploadedFiles,
     };
-  
+
     await this.projectService.updateProjectById(id, updatedProjectData);
-  
-    // Fetch updated project details
     const updatedProject = await this.projectService.getProjectById(id);
-  
+
     return {
-      project: updatedProject, // Full project object
-      uploadedFiles: newUploadedFiles, // Only new files are returned here for the response
+      project: updatedProject,
+      uploadedFiles: newUploadedFiles,
     };
   }
-  
-  
-  
-  
-
-
-
-  
 
   @Delete(':id')
   @UseGuards(AuthGuard())
