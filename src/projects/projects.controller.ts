@@ -54,7 +54,7 @@ export class ProjectsController {
       uploadedFiles = await Promise.all(
         files.files.map(async (file) => {
           const uploadResult = await this.cloudinaryService.uploadFile(file);
-          return { filename: file.originalname, url: uploadResult.secure_url };
+          return { filename: file.originalname, url: uploadResult.url};
         }),
       );
     }
@@ -69,8 +69,6 @@ export class ProjectsController {
 
     return { project, uploadedFiles }; 
   }
-
-
 
   @Get('/client/:id')
   @UseGuards(AuthGuard())
@@ -100,7 +98,7 @@ export class ProjectsController {
       newUploadedFiles = await Promise.all(
         files.files.map(async (file) => {
           const uploadResult = await this.cloudinaryService.uploadFile(file);
-          return { filename: file.originalname, url: uploadResult.secure_url };
+          return { filename: file.originalname, url: uploadResult.url};
         }),
       );
       console.log("newUploadedFiles", newUploadedFiles);
@@ -126,8 +124,6 @@ export class ProjectsController {
       uploadedFiles: newUploadedFiles,
     };
   }
-
-
 
   @Delete(':id')
   @UseGuards(AuthGuard())

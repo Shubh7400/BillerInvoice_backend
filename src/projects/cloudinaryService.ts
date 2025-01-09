@@ -21,6 +21,7 @@ export class CloudinaryService {
       cloudinary.uploader.upload_stream(
         {
           resource_type: 'auto',
+          // folder:'pdfs',
           use_filename: true, // Optional: retain original filename
         },
         (error, result) => {
@@ -29,8 +30,6 @@ export class CloudinaryService {
             reject(error);
           } else {
             console.log('Cloudinary upload result:', result);
-
-
             resolve(result);
           }
         }

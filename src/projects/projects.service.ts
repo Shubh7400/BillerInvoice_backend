@@ -13,7 +13,9 @@ import { User } from 'src/auth/schemas/user';
 import { Cloudinary } from '@cloudinary/url-gen';
 import * as dotenv from 'dotenv';
 import { v2 as cloudinary } from 'cloudinary'; // Correct import for cloudinary v2
+
 dotenv.config();
+
 @Injectable()
 export class ProjectsService {
   constructor(
@@ -68,6 +70,7 @@ export class ProjectsService {
       return error;
     }
   }
+  //  original getProjectById function 
   // async getProjectById(id: string) {
   //   try {
   //     const project = await this.projectModel.findById(id);
@@ -76,6 +79,8 @@ export class ProjectsService {
   //     throw new NotFoundException('Project does not exists');
   //   }
   // }
+
+  // modified getProjectById for converting pdf  to image
   async getProjectById(id: string) {
     try {
       const project = await this.projectModel.findById(id);
@@ -100,8 +105,8 @@ export class ProjectsService {
             .format('jpg') // Convert PDF to JPG
             .toURL();
 
-          return {
-            filename: file.filename, // Use 'filename' as per the expected type
+          return { 
+            filename: file.filename,
             imageUrl,                // Transformed image URL
             url: file.url,           // Original file URL for download
           };
@@ -113,7 +118,7 @@ export class ProjectsService {
       throw new NotFoundException('Project does not exist');
     }
   }
-  
+
 
 
   async updateProjectById(id: string, updateProjectDto: UpdateProjectDto) {

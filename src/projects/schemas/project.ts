@@ -72,6 +72,7 @@ export class Project extends Document {
     filename: string;
     url: string;
     imageUrl: string;
+  
   }[];
 
   
