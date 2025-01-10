@@ -79,11 +79,9 @@ export class UpdateInvoiceDto {
   @IsNumber()
   grandTotal?: number;
 
-
   @IsOptional()
   @IsString()
   taxType?: string;
-
 
   // Additional fields to hold client and admin details
   // @IsObject()

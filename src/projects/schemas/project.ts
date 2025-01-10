@@ -53,7 +53,6 @@ export class Project extends Document {
     email: string[];
   };
 
-
   @Prop()                                                                                                
   amount: number;
   @Prop()

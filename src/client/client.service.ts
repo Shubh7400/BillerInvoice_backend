@@ -94,4 +94,35 @@ export class ClientService {
       );
     }
   }
+  async deleteEmail(id: string, email: string) {
+    try {
+      const client = await this.clientModel.findById(id);
+
+      if (!client) {
+        throw new HttpException(
+          'Client not found',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      // Check if the email exists in the array
+      if (!client.email.includes(email)) {
+        throw new HttpException(
+          'Email not found for the client',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // Remove the email from the array
+      client.email = client.email.filter((e) => e !== email);
+      await client.save();
+
+      return 'Email successfully deleted';
+    } catch (error) {
+      throw new HttpException(
+        'Error in deleting email',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
