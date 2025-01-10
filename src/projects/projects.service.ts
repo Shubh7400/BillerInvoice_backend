@@ -11,6 +11,7 @@ import { CreateProjectDto } from './dto/createproject.dto';
 import { UpdateProjectDto } from './dto/updateproject.dto';
 import { User } from 'src/auth/schemas/user';
 import { Cloudinary } from '@cloudinary/url-gen';
+import { Client } from 'src/client/schemas/clients';
 import * as dotenv from 'dotenv';
 import { v2 as cloudinary } from 'cloudinary'; // Correct import for cloudinary v2
 
@@ -20,47 +21,106 @@ dotenv.config();
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private readonly projectModel: Model<Project>,
+    @InjectModel(Client.name) private clientModel: Model<Client>,
   ) { }
+
+  // async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
+  //   const newProjectName = createProjectDto.projectName.trim();
+  //   if (newProjectName.length === 0) {
+  //     throw new HttpException(
+  //       'Enter a valid Project Name',
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   } else {
+  //     createProjectDto.projectName = newProjectName;
+
+  //     try {
+  //       // Log the DTO to see uploadedFiles
+  //       console.log("----", createProjectDto);
+
+  //       if (this.calculateAmount(createProjectDto)) {
+  //         const amount = this.calculateAmount(createProjectDto);
+  //         const data = {
+  //           ...createProjectDto,
+  //           amount,
+  //           advanceAmount: createProjectDto.advanceAmount || 0, // Default to 0 if not provided
+  //         };
+
+  //         console.log(data, ' <<<<<<<<<');
+  //         return await this.projectModel.create(data);
+  //       } else {
+  //         const project = new this.projectModel({
+  //           ...createProjectDto,
+  //         });
+
+  //         return project.save();
+  //       }
+  //     } catch (error) {
+  //       throw new HttpException(
+  //         'error in creating project',
+  //         HttpStatus.BAD_REQUEST,
+  //       );
+  //     }
+  //   }
+  // }
 
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
     const newProjectName = createProjectDto.projectName.trim();
     if (newProjectName.length === 0) {
-      throw new HttpException(
-        'Enter a valid Project Name',
-        HttpStatus.BAD_REQUEST,
-      );
-    } else {
-      createProjectDto.projectName = newProjectName;
-
-      try {
-        // Log the DTO to see uploadedFiles
-        console.log("----", createProjectDto);
-
-        if (this.calculateAmount(createProjectDto)) {
-          const amount = this.calculateAmount(createProjectDto);
-          const data = {
-            ...createProjectDto,
-            amount,
-            advanceAmount: createProjectDto.advanceAmount || 0, // Default to 0 if not provided
-          };
-
-          console.log(data, ' <<<<<<<<<');
-          return await this.projectModel.create(data);
-        } else {
-          const project = new this.projectModel({
-            ...createProjectDto,
-          });
-
-          return project.save();
-        }
-      } catch (error) {
         throw new HttpException(
-          'error in creating project',
-          HttpStatus.BAD_REQUEST,
+            'Enter a valid Project Name',
+            HttpStatus.BAD_REQUEST,
         );
-      }
+    } else {
+        createProjectDto.projectName = newProjectName;
+
+        try {
+            console.log("----", createProjectDto);
+
+            // Step 1: Fetch client details
+            const client = await this.clientModel.findById(createProjectDto.clientId);
+            if (!client) {
+                throw new Error('Client not found');
+            }
+
+            // Step 2: Add clientDetails to the project data
+            const clientDetails = {
+                clientName: client.clientName,
+                contactNo: client.contactNo,
+                gistin: client.gistin,
+                pancardNo: client.pancardNo,
+                address: client.address,
+                email: client.email,
+            };
+
+            if (this.calculateAmount(createProjectDto)) {
+                const amount = this.calculateAmount(createProjectDto);
+                const data = {
+                    ...createProjectDto,
+                    amount,
+                    advanceAmount: createProjectDto.advanceAmount || 0, // Default to 0 if not provided
+                    clientDetails, // Include the clientDetails here
+                };
+
+                console.log(data, ' <<<<<<<<<');
+                return await this.projectModel.create(data);
+            } else {
+                const project = new this.projectModel({
+                    ...createProjectDto,
+                    clientDetails, // Include the clientDetails here
+                });
+
+                return project.save();
+            }
+        } catch (error) {
+            throw new HttpException(
+                'Error in creating project',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
     }
-  }
+}
+
 
   async getAllProjects(id: string) {
     try {

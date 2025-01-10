@@ -22,6 +22,38 @@ export class Project extends Document {
   conversionRate: number;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Client' })
   clientId: Client;
+  @Prop({
+    type: {
+      clientName: String,
+      contactNo: String,
+      gistin: String,
+      pancardNo: String,
+      address: {
+        street: String,
+        city: String,
+        state: String,
+        country: String,
+        postalCode: String,
+      },
+      email: [String],
+    },
+  })
+  clientDetails: {
+    clientName: string;
+    contactNo: string;
+    gistin: string;
+    pancardNo: string;
+    address: {
+      street: string;
+      city: string;
+      state: string;
+      country: string;
+      postalCode: string;
+    };
+    email: string[];
+  };
+
+
   @Prop()                                                                                                
   amount: number;
   @Prop()
@@ -74,8 +106,6 @@ export class Project extends Document {
     imageUrl: string;
   
   }[];
-
-  
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

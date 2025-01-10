@@ -1,4 +1,4 @@
-import { IsDateString, IsMongoId, IsNotEmpty, IsNumber ,IsOptional,IsString} from 'class-validator';
+import { IsDateString, IsMongoId, IsNotEmpty, IsNumber ,IsOptional,IsString,IsObject} from 'class-validator';
 
 export class CreateInvoiceDto {
   @IsNumber()
@@ -85,5 +85,31 @@ export class CreateInvoiceDto {
   @IsOptional()
   @IsString()
   taxType?: string;
+
+
+  // Additional fields to hold client and admin details
+  // @IsObject()
+  // clientDetails: {
+  //   clientName: string;
+  //   contactNo: string;
+  //   gistin: string;
+  //   pancardNo: string;
+  //   address: object;
+  //   email: string[];
+  // };
+
+  // @IsObject()
+  // adminDetails: {
+  //   email: string;
+  //   companyName: string;
+  //   gistin: string;
+  //   contactNo: string;
+  //   pancardNo: string;
+  //   address: object;
+  //   companyLogo: string;
+  //   accountNo: string;
+  //   ifsc: string;
+  //   bank: string;
+  // };
 
 }

@@ -100,5 +100,14 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   endDate?: string;
+
+  clientDetails?: {
+    clientName: string;
+    contactNo: string;
+    gistin: string;
+    pancardNo: string;
+    address: string;
+    email: string;
+}; // Optional field for client details
 }
 
