@@ -11,16 +11,21 @@ import { CreateProjectDto } from './dto/createproject.dto';
 import { UpdateProjectDto } from './dto/updateproject.dto';
 import { User } from 'src/auth/schemas/user';
 import { Cloudinary } from '@cloudinary/url-gen';
+import { Client } from 'src/client/schemas/clients';
 import * as dotenv from 'dotenv';
 import { v2 as cloudinary } from 'cloudinary'; // Correct import for cloudinary v2
-
+import { CloudinaryService } from './cloudinaryService';
 dotenv.config();
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private readonly projectModel: Model<Project>,
+    @InjectModel(Client.name) private clientModel: Model<Client>,
+    private cloudinaryService: CloudinaryService,
   ) { }
+
+ 
 
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
     const newProjectName = createProjectDto.projectName.trim();
@@ -33,8 +38,23 @@ export class ProjectsService {
       createProjectDto.projectName = newProjectName;
 
       try {
-        // Log the DTO to see uploadedFiles
         console.log("----", createProjectDto);
+
+        // Step 1: Fetch client details
+        const client = await this.clientModel.findById(createProjectDto.clientId);
+        if (!client) {
+          throw new Error('Client not found');
+        }
+
+        // Step 2: Add clientDetails to the project data
+        const clientDetails = {
+          clientName: client.clientName,
+          contactNo: client.contactNo,
+          gistin: client.gistin,
+          pancardNo: client.pancardNo,
+          address: client.address,
+          email: client.email,
+        };
 
         if (this.calculateAmount(createProjectDto)) {
           const amount = this.calculateAmount(createProjectDto);
@@ -42,6 +62,7 @@ export class ProjectsService {
             ...createProjectDto,
             amount,
             advanceAmount: createProjectDto.advanceAmount || 0, // Default to 0 if not provided
+            clientDetails, // Include the clientDetails here
           };
 
           console.log(data, ' <<<<<<<<<');
@@ -49,18 +70,20 @@ export class ProjectsService {
         } else {
           const project = new this.projectModel({
             ...createProjectDto,
+            clientDetails, // Include the clientDetails here
           });
 
           return project.save();
         }
       } catch (error) {
         throw new HttpException(
-          'error in creating project',
+          'Error in creating project',
           HttpStatus.BAD_REQUEST,
         );
       }
     }
   }
+
 
   async getAllProjects(id: string) {
     try {
@@ -70,17 +93,7 @@ export class ProjectsService {
       return error;
     }
   }
-  //  original getProjectById function 
-  // async getProjectById(id: string) {
-  //   try {
-  //     const project = await this.projectModel.findById(id);
-  //     return project;
-  //   } catch (error) {
-  //     throw new NotFoundException('Project does not exists');
-  //   }
-  // }
-
-  // modified getProjectById for converting pdf  to image
+  
   async getProjectById(id: string) {
     try {
       const project = await this.projectModel.findById(id);
@@ -105,7 +118,7 @@ export class ProjectsService {
             .format('jpg') // Convert PDF to JPG
             .toURL();
 
-          return { 
+          return {
             filename: file.filename,
             imageUrl,                // Transformed image URL
             url: file.url,           // Original file URL for download
@@ -172,6 +185,48 @@ export class ProjectsService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+  async deleteFileFromProject(projectId: string, filename: string) {
+    try {
+      // Find the project by ID
+      const project = await this.projectModel.findById(projectId);
+      if (!project) {
+        throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+      }
+
+      // Find and remove the file from the uploadedFiles array
+      const fileIndex = project.uploadedFiles.findIndex(
+        (file) => file.filename === filename,
+      );
+      if (fileIndex === -1) {
+        throw new HttpException('File not found', HttpStatus.NOT_FOUND);
+      }
+
+      const [removedFile] = project.uploadedFiles.splice(fileIndex, 1);
+
+      // Update the project
+      await project.save();
+
+      // Optionally delete the file from Cloudinary
+      if (removedFile.url) {
+        const publicId = this.extractPublicIdFromUrl(removedFile.url);
+        await this.cloudinaryService.deleteFile(publicId);
+      }
+
+      return { message: 'File successfully deleted', removedFile };
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error deleting file',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  private extractPublicIdFromUrl(url: string): string {
+    const parts = url.split('/');
+    const fileName = parts[parts.length - 1];
+    const [publicId] = fileName.split('.');
+    return publicId;
   }
   calculateAmount(dto: any): number | null {
     const {

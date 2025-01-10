@@ -48,26 +48,26 @@ export class ProjectsController {
   ): Promise<ProjectResponseDto> {
     let uploadedFiles: FileResponseDto[] = [];
 
-    console.log('Received files while create:', files); 
+    console.log('Received files while create:', files);
 
     if (files?.files?.length) {
       uploadedFiles = await Promise.all(
         files.files.map(async (file) => {
           const uploadResult = await this.cloudinaryService.uploadFile(file);
-          return { filename: file.originalname, url: uploadResult.url};
+          return { filename: file.originalname, url: uploadResult.url };
         }),
       );
     }
 
     const projectData = {
       ...createProjectDto,
-      uploadedFiles, 
+      uploadedFiles,
     };
 
     const project = await this.projectService.createProject(projectData);
 
 
-    return { project, uploadedFiles }; 
+    return { project, uploadedFiles };
   }
 
   @Get('/client/:id')
@@ -98,7 +98,7 @@ export class ProjectsController {
       newUploadedFiles = await Promise.all(
         files.files.map(async (file) => {
           const uploadResult = await this.cloudinaryService.uploadFile(file);
-          return { filename: file.originalname, url: uploadResult.url};
+          return { filename: file.originalname, url: uploadResult.url };
         }),
       );
       console.log("newUploadedFiles", newUploadedFiles);
@@ -129,6 +129,14 @@ export class ProjectsController {
   @UseGuards(AuthGuard())
   deleteProjectById(@Param('id') id: string) {
     return this.projectService.deleteProjectById(id);
+  }
+  @Delete(':id/file')
+  @UseGuards(AuthGuard())
+  async deleteFileFromProject(
+    @Param('id') projectId: string,
+    @Body('filename') filename: string,
+  ) {
+    return this.projectService.deleteFileFromProject(projectId, filename);
   }
   @Get('/admin/:AdminId')
   @UseGuards(AuthGuard())

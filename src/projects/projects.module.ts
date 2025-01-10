@@ -7,6 +7,8 @@ import { Project, ProjectSchema } from './schemas/project';
 import { AuthModule } from 'src/auth/auth.module';
 import { User, UserSchema } from 'src/auth/schemas/user';
 import { CloudinaryModule } from './cloudinaryModule';
+import { Client,ClientSchema } from 'src/client/schemas/clients';
+Client
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { CloudinaryModule } from './cloudinaryModule';
     AuthModule,
     MongooseModule.forFeature([{ name: Project.name, schema: ProjectSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: Client.name, schema: ClientSchema }]),
     CloudinaryModule, // Add CloudinaryModule here
   ],
   controllers: [ProjectsController],
