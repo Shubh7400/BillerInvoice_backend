@@ -51,7 +51,7 @@ export class UpdateInvoiceDto {
   @IsOptional()
   @IsNumber()
   rate?: number;
-
+                                                                                                                                                                                                    
   @IsOptional()
   workingPeriodType?: 'hours' | 'months'|'fixed';
 

@@ -100,32 +100,31 @@ export class ProjectsService {
       if (!project) {
         throw new NotFoundException('Project does not exist');
       }
-
-      // Transform uploaded files (e.g., PDFs) to include image URLs and retain original file URLs
+  
+      // Transform uploaded files to include image URLs and view URLs
       if (project.uploadedFiles && Array.isArray(project.uploadedFiles)) {
-        const cloudinary = new Cloudinary({
-          cloud: {
-            cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-          },
-        });
-
         project.uploadedFiles = project.uploadedFiles.map((file) => {
-          const publicId = file.url.split('/').pop()?.split('.')[0]; // Extract publicId from URL
-
-          // Generate image URL for the PDF
-          const imageUrl = cloudinary
-            .image(publicId)
-            .format('jpg') // Convert PDF to JPG
-            .toURL();
-
+          const fileExtension = file.filename.toLowerCase();
+  
+          // Default to original image URL if available
+          let imageUrl = file.imageUrl;
+  
+          // Generate image URL for docs and PDFs if not already available
+          if (
+            !imageUrl &&
+            (fileExtension.endsWith('.pdf') || fileExtension.endsWith('.doc') || fileExtension.endsWith('.docx'))
+          ) {
+            const publicId = file.url.split('/').pop()?.split('.')[0]; // Extract publicId from URL
+            imageUrl = cloudinary.url(publicId, { format: 'jpg', page: 1 });
+          }
+  
           return {
-            filename: file.filename,
-            imageUrl,                // Transformed image URL
-            url: file.url,           // Original file URL for download
+            ...file,
+            imageUrl, // Ensure image URL is added
           };
         });
       }
-
+  
       return project;
     } catch (error) {
       throw new NotFoundException('Project does not exist');
@@ -159,10 +158,14 @@ export class ProjectsService {
 
         };
         console.log({ data });
-        await this.projectModel.findByIdAndUpdate(id, data);
+        // await this.projectModel.findByIdAndUpdate(id, data);
+        await this.projectModel.findByIdAndUpdate(id, data, { new: true });
+
         return 'successfully updated';
       } else {
-        await this.projectModel.findByIdAndUpdate(id, updateProjectDto);
+        // await this.projectModel.findByIdAndUpdate(id, updateProjectDto);
+        await this.projectModel.findByIdAndUpdate(id, updateProjectDto, { new: true });
+
         return 'successfully updated';
       }
     } catch (error) {
