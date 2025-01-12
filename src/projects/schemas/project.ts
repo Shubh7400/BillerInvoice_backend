@@ -96,6 +96,7 @@ export class Project extends Document {
         filename: String,
         url: String,
         imageUrl: String,
+        viewUrl: String,
       },
     ],
   })
@@ -103,6 +104,7 @@ export class Project extends Document {
     filename: string;
     url: string;
     imageUrl: string;
+    viewUrl: String,
   
   }[];
 }

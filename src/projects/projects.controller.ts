@@ -54,7 +54,13 @@ export class ProjectsController {
       uploadedFiles = await Promise.all(
         files.files.map(async (file) => {
           const uploadResult = await this.cloudinaryService.uploadFile(file);
-          return { filename: file.originalname, url: uploadResult.url };
+          
+          return {
+            filename: file.originalname,
+            url: uploadResult.url,      // Original file URL for download
+            imageUrl: uploadResult.imageUrl, // Image URL for PDFs
+            viewUrl: uploadResult.viewUrl,   // View URL for DOC files
+          };
         }),
       );
     }
@@ -94,15 +100,21 @@ export class ProjectsController {
 
     let newUploadedFiles: FileResponseDto[] = [];
 
+    
     if (files?.files?.length) {
       newUploadedFiles = await Promise.all(
         files.files.map(async (file) => {
           const uploadResult = await this.cloudinaryService.uploadFile(file);
-          return { filename: file.originalname, url: uploadResult.url };
+          return {
+            filename: file.originalname,
+            url: uploadResult.url,        // Original file URL for download
+            imageUrl: uploadResult.imageUrl, // Image URL for PDFs
+            viewUrl: uploadResult.viewUrl,   // View URL for DOC files
+          };
         }),
       );
-      console.log("newUploadedFiles", newUploadedFiles);
     }
+    
 
     const existingProject = await this.projectService.getProjectById(id);
 
@@ -116,7 +128,9 @@ export class ProjectsController {
       uploadedFiles: combinedUploadedFiles,
     };
 
-    await this.projectService.updateProjectById(id, updatedProjectData);
+    // await this.projectService.updateProjectById(id, updatedProjectData);
+    await this.projectService.updateProjectById(id, { ...updatedProjectData });
+
     const updatedProject = await this.projectService.getProjectById(id);
 
     return {
