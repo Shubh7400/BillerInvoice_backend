@@ -166,114 +166,6 @@ export class InvoiceService {
     return invoices;
   }
   
-
-  // async getInvoicesByDateRange(
-  //   fromYear: string,
-  //   fromMonth: string,
-  //   toYear: string,
-  //   toMonth: string,
-  //   userId: string,
-  // ) {
-  //   const fromDate = new Date(`${fromYear}-${fromMonth}-01`);
-  //   const toDate = new Date(`${toYear}-${toMonth}-01`);
-  //   toDate.setMonth(toDate.getMonth() + 1);
-
-  //   try {
-  //     const invoices = await this.invoiceModel.aggregate([
-  //       {
-  //         $match: {
-  //           adminId: new Types.ObjectId(userId),
-  //           billDate: {
-  //             $gte: fromDate,
-  //             $lt: toDate,
-  //           },
-  //         },
-  //       },
-  //       {
-  //         $lookup: {
-  //           from: 'users', // Collection name for the users
-  //           localField: 'adminId', // Field from the invoice model
-  //           foreignField: '_id', // Field from the User model
-  //           as: 'userData', // Resulting field
-  //         },
-  //       },
-  //       {
-  //         $unwind: {
-  //           path: '$userData',
-  //           preserveNullAndEmptyArrays: true,
-  //         },
-  //       },
-  //       // Lookup client collection based on projects.clientId
-  //       {
-  //         $lookup: {
-  //           from: 'clients',
-  //           localField: 'clientId', 
-  //           foreignField: '_id',
-  //           as: 'clientData',
-  //         },
-  //       },
-  //       {
-  //         $unwind: {
-  //           path: '$clientData',
-  //           preserveNullAndEmptyArrays: true,
-  //         },
-  //       },
-  //       {
-  //         $project: {
-  //           _id: 0,
-  //           invoiceId: '$_id',
-  //           invoiceNo: 1,
-  //           billDate: 1,
-  //           dueDate: 1,
-  //           adminId: 1,
-  //           clientId: 1,
-  //           projectName: "$projectName",
-  //           rate: 1,
-  //           description: "$description",
-  //           workingPeriodType: "$workingPeriodType",
-  //           workingPeriod: 1,
-  //           conversionRate: 1,
-  //           amount: 1,
-  //           advanceAmount: 1,
-  //           paymentStatus: "$paymentStatus",
-  //           currencyType: "$currencyType",
-  //           projectPeriod: 1,
-  //           ratePerDay: 1,
-  //           amountWithoutTax: 1,
-  //           amountAfterTax: 1,
-  //           taxType: "$taxType",
-  //           taxAmount: 1,
-  //           grandTotal: 1,
-  //           // User details
-  //           userId: '$userData._id',
-  //           userEmail: '$userData.email',
-  //           companyName: '$userData.companyName',
-  //           gistin: '$userData.gistin',
-  //           contactNo: '$userData.contactNo',
-  //           pancardNo: '$userData.pancardNo',
-  //           address: '$userData.address',
-  //           invoiceNoUser: '$userData.invoiceNo',
-  //           companyLogo: '$userData.companyLogo',
-  //           accountNo: '$userData.accountNo',
-  //           ifsc: '$userData.ifsc',
-  //           bank: '$userData.bank',
-  //           //  Client details
-  //           clientName: '$clientData.clientName',
-  //           clientGstin: '$clientData.gistin',
-  //           clientPanCard: '$clientData.pancardNo',
-  //           clientAddress: '$clientData.address',
-  //           sameState: '$clientData.sameState',
-  //           clientEmails: '$clientData.email',
-  //           clientContactNo: '$clientData.contactNo',
-  //         },
-  //       },
-  //     ]);
-
-  //     return invoices;
-  //   } catch (error) {
-  //     throw new Error('Failed to fetch invoices by date range');
-  //   }
-  // }
   async getInvoicesByDateRange(
     fromYear: string,
     fromMonth: string,
@@ -283,31 +175,33 @@ export class InvoiceService {
   ) {
     const formattedFromMonth = fromMonth.toString().padStart(2, '0');
     const formattedToMonth = toMonth.toString().padStart(2, '0');
-    
-    const fromDate = new Date(`${fromYear}-${formattedFromMonth}-01`);
-    const toDate = new Date(`${toYear}-${formattedToMonth}-01`);
-    toDate.setMonth(toDate.getMonth() + 1);
   
+    const fromDate = new Date(`${fromYear}-${formattedFromMonth}-01T00:00:00Z`);
+    const toDate = new Date(`${toYear}-${formattedToMonth}-01T00:00:00Z`);
+    toDate.setMonth(toDate.getMonth() + 1); // Move to the start of the next month
+
     if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
       throw new BadRequestException('Invalid date range provided.');
     }
-  
+
     try {
       const invoices = await this.invoiceModel
         .find({
-          adminId: userId, // Ensure adminId matches the logged-in user
-          billDate: { $gte: fromDate, $lt: toDate }, // Match the date range
+          adminId: new Types.ObjectId(userId),
+          billDate: { $gte: fromDate, $lt: toDate },
         })
         .exec();
-  
-      if (!invoices.length) {
-        throw new NotFoundException('No invoices found for the specified date range.');
+
+      if (!invoices || invoices.length === 0) {
+        return []; 
       }
-  
+
       return invoices;
     } catch (error) {
+      console.error('Error fetching invoices by date range:', error);
       throw new InternalServerErrorException('Failed to fetch invoices by date range.');
     }
   }
+  
   
 }
