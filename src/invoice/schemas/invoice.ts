@@ -13,8 +13,48 @@ export class Invoice extends Document {
   dueDate: Date;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Client' })
   clientId: Client;
+
+
+  @Prop({
+    type: Object,
+    default: {},
+  })
+  clientDetails: {
+    clientName: string;
+    contactNo:string;
+    gistin: string;
+    pancardNo: string;
+    address: {
+      street: string;
+      city: string;
+      state: string;
+      country: string;
+      postalCode: string;
+    };
+    email: string[];
+  };
+
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   adminId: User;
+
+  @Prop({
+    type: Object,
+    default: {},
+  })
+  adminDetails: {
+    email: string;
+    companyName: string;
+    gistin: string;
+    contactNo: string;
+    pancardNo: string;
+    address: string;
+    companyLogo: string;
+    accountNo: string;
+    ifsc: string;
+    bank: string;
+  };
+
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }] })
   projectsId: Project[];
   @Prop()

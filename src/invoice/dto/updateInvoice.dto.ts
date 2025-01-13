@@ -1,4 +1,4 @@
-import { IsDateString, IsMongoId, IsNumber, IsOptional,IsString,IsNotEmpty} from 'class-validator';
+import { IsDateString, IsMongoId, IsNumber, IsOptional,IsString,IsNotEmpty,IsObject} from 'class-validator';
 
 export class UpdateInvoiceDto {
   @IsNumber()
@@ -51,7 +51,7 @@ export class UpdateInvoiceDto {
   @IsOptional()
   @IsNumber()
   rate?: number;
-
+                                                                                                                                                                                                    
   @IsOptional()
   workingPeriodType?: 'hours' | 'months'|'fixed';
 
@@ -79,10 +79,34 @@ export class UpdateInvoiceDto {
   @IsNumber()
   grandTotal?: number;
 
-
   @IsOptional()
   @IsString()
   taxType?: string;
+
+  // Additional fields to hold client and admin details
+  // @IsObject()
+  clientDetails: {
+    clientName: string;
+    contactNo: string;
+    gistin: string;
+    pancardNo: string;
+    address: object;
+    email: string[];
+  };
+
+  // @IsObject()
+  adminDetails: {
+    email: string;
+    companyName: string;
+    gistin: string;
+    contactNo: string;
+    pancardNo: string;
+    address: object;
+    companyLogo: string;
+    accountNo: string;
+    ifsc: string;
+    bank: string;
+  };
 
 
 }

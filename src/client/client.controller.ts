@@ -46,4 +46,12 @@ export class ClientController {
   async deleteById(@Param('id') id: string) {
     return this.clientService.DeleteClientById(id);
   }
+
+  @Delete(':id/email')
+  async deleteEmail(
+    @Param('id') id: string,
+    @Body('email') email: string,
+  ) {
+    return this.clientService.deleteEmail(id, email);
+  }
 }
