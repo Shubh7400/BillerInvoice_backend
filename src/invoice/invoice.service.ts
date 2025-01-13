@@ -182,7 +182,7 @@ export class InvoiceService {
 
     if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
       throw new BadRequestException('Invalid date range provided.');
-    }
+    } 
 
     try {
       const invoices = await this.invoiceModel
