@@ -17,6 +17,8 @@ export class CreateProjectDto {
   // @IsOptional()
   // @IsString()
   // projectManager?: string;
+  @IsNotEmpty()
+  resumeName: string;
 
   @IsOptional()
   @IsNumber()

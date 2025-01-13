@@ -65,6 +65,9 @@ export class Invoice extends Document {
   // for project
   @Prop()
   projectName: string;
+
+  @Prop()
+  resumeName: string;
   @Prop()
   rate: number;
   // @Prop()

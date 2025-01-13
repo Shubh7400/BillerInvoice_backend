@@ -46,6 +46,10 @@ export class UpdateInvoiceDto {
   projectName?: string;
 
   @IsOptional()
+  @IsNotEmpty()
+  resumeName: string;
+
+  @IsOptional()
   projectManager?: string;
 
   @IsOptional()

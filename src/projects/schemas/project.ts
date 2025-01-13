@@ -6,6 +6,10 @@ import { Client } from 'src/client/schemas/clients';
 export class Project extends Document {
   @Prop()
   projectName: string;
+
+  @Prop()
+  resumeName: string;
+
   @Prop()
   rate: number;
   // @Prop()
