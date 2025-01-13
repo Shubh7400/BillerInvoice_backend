@@ -159,9 +159,9 @@ export class InvoiceService {
       .find({ billDate: { $gte: startDate, $lt: endDate } })
       .exec();
   
-    if (!invoices.length) {
-      throw new NotFoundException('No invoices found for the specified year and month.');
-    }
+      if (!invoices || invoices.length === 0) {
+        return []; 
+      }
   
     return invoices;
   }
