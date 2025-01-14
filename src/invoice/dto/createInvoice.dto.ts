@@ -38,6 +38,10 @@ export class CreateInvoiceDto {
   @IsNumber()
   workingPeriod?: number;
 
+  @IsOptional()
+  @IsNumber()
+  sacNo?: number;
+
   @IsNumber()
   @IsNotEmpty()
   conversionRate: number;

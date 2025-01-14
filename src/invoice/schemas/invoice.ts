@@ -94,6 +94,8 @@ export class Invoice extends Document {
   @Prop()
   grandTotal: number;
   @Prop()
+  sacNo: number;
+  @Prop()
   taxType: "cgst" | "igst" | "sgst";
 }
 export const InvoiceSchema = SchemaFactory.createForClass(Invoice);
