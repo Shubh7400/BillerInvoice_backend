@@ -52,6 +52,9 @@ export class CreateInvoiceDto {
   @IsNotEmpty()
   projectName: string;
 
+  @IsNotEmpty()
+  resumeName: string;
+
   // @IsOptional()
   // @IsString()
   // projectManager?: string;
