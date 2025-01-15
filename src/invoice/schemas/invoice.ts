@@ -75,6 +75,8 @@ export class Invoice extends Document {
   workingPeriodType: 'hours' | 'months'|'fixed';
   @Prop()
   workingPeriod: number;
+   @Prop()
+  actualDays: number;
   @Prop()
   conversionRate: number;
   @Prop()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               

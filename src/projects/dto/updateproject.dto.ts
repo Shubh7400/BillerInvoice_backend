@@ -37,6 +37,18 @@ export class UpdateProjectDto {
   workingPeriod?: number;
 
   @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
+  actualDays?: number;
+
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
+  sacNo?: number;
+  
+
+  @IsOptional()
   workingPeriodType?: 'hours' | 'months'|'fixed';
 
   @IsMongoId()

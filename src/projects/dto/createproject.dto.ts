@@ -39,6 +39,16 @@ export class CreateProjectDto {
   workingPeriod?: number;
 
   @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
+  sacNo?: number;
+  
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
+  actualDays?: number;
+
+  @IsOptional()
   workingPeriodType?: 'hours' | 'months' |'fixed';
 
   @IsMongoId()

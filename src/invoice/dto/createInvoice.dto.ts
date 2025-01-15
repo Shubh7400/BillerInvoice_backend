@@ -37,6 +37,9 @@ export class CreateInvoiceDto {
   @IsOptional()
   @IsNumber()
   workingPeriod?: number;
+  @IsOptional()
+  @IsNumber()
+  actualDays?: number;
 
   @IsOptional()
   @IsNumber()

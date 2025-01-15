@@ -36,6 +36,9 @@ export class UpdateInvoiceDto {
   @IsOptional()
   @IsNumber()
   workingPeriod?: number;
+  @IsOptional()
+  @IsNumber()
+  actualDays?: number;
 
   @IsNumber()
   @IsNotEmpty()
