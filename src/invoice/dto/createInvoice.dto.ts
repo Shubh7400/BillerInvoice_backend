@@ -37,6 +37,13 @@ export class CreateInvoiceDto {
   @IsOptional()
   @IsNumber()
   workingPeriod?: number;
+  @IsOptional()
+  @IsNumber()
+  actualDays?: number;
+
+  @IsOptional()
+  @IsNumber()
+  sacNo?: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -44,6 +51,9 @@ export class CreateInvoiceDto {
 
   @IsNotEmpty()
   projectName: string;
+
+  @IsNotEmpty()
+  resumeName: string;
 
   // @IsOptional()
   // @IsString()

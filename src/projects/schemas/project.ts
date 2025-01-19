@@ -6,6 +6,10 @@ import { Client } from 'src/client/schemas/clients';
 export class Project extends Document {
   @Prop()
   projectName: string;
+
+  @Prop()
+  resumeName: string;
+
   @Prop()
   rate: number;
   // @Prop()
@@ -18,6 +22,10 @@ export class Project extends Document {
   workingPeriodType: 'hours' | 'months'|'fixed';
   @Prop()
   workingPeriod: number;
+  @Prop()
+  actualDays: number;
+  @Prop()
+  sacNo: number;
   @Prop()
   conversionRate: number;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Client' })

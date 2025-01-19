@@ -130,8 +130,6 @@ export class ProjectsService {
     }
   }
 
-
-
   async updateProjectById(id: string, updateProjectDto: UpdateProjectDto) {
     if (updateProjectDto.projectName) {
       console.log(updateProjectDto.projectName);
@@ -145,35 +143,58 @@ export class ProjectsService {
         updateProjectDto.projectName = newProjectName;
       }
     }
-
+  
     try {
+      let clientDetails = null;
+  
+      // If clientId is provided, fetch the client details
+      if (updateProjectDto.clientId) {
+        const client = await this.clientModel.findById(updateProjectDto.clientId);
+        if (!client) {
+          throw new Error('Client not found');
+        }
+  
+        clientDetails = {
+          clientName: client.clientName,
+          contactNo: client.contactNo,
+          gistin: client.gistin,
+          pancardNo: client.pancardNo,
+          address: client.address,
+          email: client.email,
+        };
+      }
+  
       if (this.calculateAmount(updateProjectDto)) {
         const amount = this.calculateAmount(updateProjectDto);
-        console.log(amount);
         const data = {
           ...updateProjectDto,
           amount,
           advanceAmount: updateProjectDto.advanceAmount || 0, // Default to 0 if not provided
-
+          ...(clientDetails && { clientDetails }), // Include client details if available
         };
+  
         console.log({ data });
-        // await this.projectModel.findByIdAndUpdate(id, data);
         await this.projectModel.findByIdAndUpdate(id, data, { new: true });
-
+  
         return 'successfully updated';
       } else {
-        // await this.projectModel.findByIdAndUpdate(id, updateProjectDto);
-        await this.projectModel.findByIdAndUpdate(id, updateProjectDto, { new: true });
-
+        const data = {
+          ...updateProjectDto,
+          ...(clientDetails && { clientDetails }), // Include client details if available
+        };
+  
+        await this.projectModel.findByIdAndUpdate(id, data, { new: true });
+  
         return 'successfully updated';
       }
     } catch (error) {
       throw new HttpException(
-        'error in updating project',
+        'Error in updating project',
         HttpStatus.BAD_REQUEST,
       );
     }
   }
+  
 
 
 

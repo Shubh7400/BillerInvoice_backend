@@ -83,17 +83,45 @@ export class ClientService {
       }
     }
   }
-  async DeleteClientById(id: string) {
+  // async DeleteClientById(id: string) {
+  //   try {
+  //     await this.clientModel.findByIdAndDelete(id);
+  //     return 'client successfully deleted';
+  //   } catch (error) {
+  //     throw new HttpException(
+  //       'error in deleting client',
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   }
+  // }
+
+  async toggleClientStatusById(id: string) {
     try {
-      await this.clientModel.findByIdAndDelete(id);
-      return 'client successfully deleted';
+      const client = await this.clientModel.findById(id);
+      if (!client) {
+        throw new HttpException('Client not found', HttpStatus.NOT_FOUND);
+      }
+  
+      // Toggle status
+      client.isActive = client.isActive === 'active' ? 'inactive' : 'active';
+      await client.save();
+  
+      return {
+        message: `Client status updated to ${client.isActive}`,
+        client,
+      };
     } catch (error) {
       throw new HttpException(
-        'error in deleting client',
+        'Error toggling client status',
         HttpStatus.BAD_REQUEST,
       );
     }
   }
+  async getClients(filter: any) {
+    return this.clientModel.find(filter);
+  }
+  
+  
   async deleteEmail(id: string, email: string) {
     try {
       const client = await this.clientModel.findById(id);

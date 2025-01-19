@@ -25,6 +25,9 @@ export class Client extends Document {
   sameState: boolean;
   @Prop({ type: [String] })
   email: string[];
+
+  @Prop({ default: 'active', enum: ['active', 'inactive'] }) // New field
+  isActive: string;
 }
 
 export const ClientSchema = SchemaFactory.createForClass(Client);

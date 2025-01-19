@@ -17,6 +17,8 @@ export class CreateProjectDto {
   // @IsOptional()
   // @IsString()
   // projectManager?: string;
+  @IsNotEmpty()
+  resumeName: string;
 
   @IsOptional()
   @IsNumber()
@@ -37,6 +39,16 @@ export class CreateProjectDto {
   @IsNumber()
   @Transform(({ value }) => parseFloat(value))
   workingPeriod?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
+  sacNo?: number;
+  
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
+  actualDays?: number;
 
   @IsOptional()
   workingPeriodType?: 'hours' | 'months' |'fixed';

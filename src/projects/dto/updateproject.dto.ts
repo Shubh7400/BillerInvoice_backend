@@ -15,6 +15,10 @@ export class UpdateProjectDto {
   projectName?: string;
 
   @IsOptional()
+  @IsNotEmpty()
+  resumeName: string;
+
+  @IsOptional()
   projectManager?: string;
 
   @IsOptional()
@@ -35,6 +39,18 @@ export class UpdateProjectDto {
   @IsNumber()
   @Transform(({ value }) => parseFloat(value))
   workingPeriod?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
+  actualDays?: number;
+
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
+  sacNo?: number;
+  
 
   @IsOptional()
   workingPeriodType?: 'hours' | 'months'|'fixed';

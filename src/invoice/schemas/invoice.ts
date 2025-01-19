@@ -65,6 +65,9 @@ export class Invoice extends Document {
   // for project
   @Prop()
   projectName: string;
+
+  @Prop()
+  resumeName: string;
   @Prop()
   rate: number;
   // @Prop()
@@ -75,6 +78,8 @@ export class Invoice extends Document {
   workingPeriodType: 'hours' | 'months'|'fixed';
   @Prop()
   workingPeriod: number;
+   @Prop()
+  actualDays: number;
   @Prop()
   conversionRate: number;
   @Prop()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
@@ -93,6 +98,8 @@ export class Invoice extends Document {
   taxAmount: number;
   @Prop()
   grandTotal: number;
+  @Prop()
+  sacNo: number;
   @Prop()
   taxType: "cgst" | "igst" | "sgst";
 }
