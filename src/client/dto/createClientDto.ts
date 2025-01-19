@@ -7,6 +7,8 @@ import {
   ArrayNotEmpty,
   IsOptional,
   isString,
+  IsBoolean,
+  IsIn
 } from 'class-validator';
 
 export class ClientDto {
@@ -39,4 +41,9 @@ export class ClientDto {
   @ArrayNotEmpty()
   @IsEmail({}, { each: true })
   email: string[];
+
+  @IsString()
+  @IsOptional()
+  @IsIn(['active', 'inactive']) // Matches the enum in the schema
+  isActive?: string;
 }

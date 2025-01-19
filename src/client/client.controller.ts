@@ -8,6 +8,7 @@ import {
   Get,
   Patch,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { ClientDto } from './dto/createClientDto';
@@ -41,11 +42,26 @@ export class ClientController {
     console.log(updateDto, ' <<<<<<<<<<<');
     return this.clientService.updateClientById(id, updateDto);
   }
+  // @UseGuards(AuthGuard())
+  // @Delete(':id')
+  // async deleteById(@Param('id') id: string) {
+  //   return this.clientService.DeleteClientById(id);
+  // }
+
   @UseGuards(AuthGuard())
-  @Delete(':id')
-  async deleteById(@Param('id') id: string) {
-    return this.clientService.DeleteClientById(id);
-  }
+@Patch(':id/toggle-status')
+async toggleStatusById(@Param('id') id: string) {
+  return this.clientService.toggleClientStatusById(id);
+}
+
+@UseGuards(AuthGuard())
+@Get()
+async getClients(@Query('isActive') isActive?: string) {
+  const filter = isActive ? { isActive } : {};
+  return this.clientService.getClients(filter);
+}
+
+
 
   @Delete(':id/email')
   async deleteEmail(
