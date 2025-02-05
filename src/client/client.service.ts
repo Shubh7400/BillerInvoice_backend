@@ -48,7 +48,8 @@ export class ClientService {
     try {
       const clients = await this.clientModel
         .find({ user: user._id })
-        .sort({ clientName: 1 });
+        // .sort({ clientName: 1 });
+        .sort({ createdAt: 1 }); 
       return clients;
     } catch (error) {
       return error;
